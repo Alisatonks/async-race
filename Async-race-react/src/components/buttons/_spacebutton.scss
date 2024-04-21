@@ -1,0 +1,170 @@
+.space-btn {
+    @include position-center(0rem);
+    width: 13rem;
+    overflow: hidden;
+    height: 3rem;
+    background-size: 290% 290%;
+    backdrop-filter: $filterSm;
+    border-radius: 5rem;
+    transition: 0.5s;
+    animation: gradient 6s ease infinite;
+    border: double 3px transparent;
+    background-image: linear-gradient(#212121, #212121),  linear-gradient(137.48deg, #ffdb3b 10%,#fe53e4 45%, #8F51EA 67%, #710870 87%);
+    background-clip: content-box, border-box; 
+    background-origin: border-box;
+    cursor: pointer;
+
+    &__text {
+      z-index: 2;
+      font-family: "Montserrat", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 16px;
+      color: #FFFFFF;
+      text-shadow: 0 0 5px white;
+    }
+
+    &:hover #stars-wrapper {
+      background-color: #212121; 
+      z-index: 1;
+    }
+
+    &:active {
+      background-origin: border-box;
+      background-clip: content-box, border-box;
+      animation: none; 
+      border: double 4px #f859b9;
+    }
+  }
+
+  .nav__link.active .space-btn {
+    border: double 3px white;
+  }
+  
+  #stars-wrapper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+    overflow: hidden;
+    transition: 0.6s;
+    backdrop-filter: $filterSm;
+    border-radius: 4rem;
+  }
+  
+  #shine { 
+    display: flex;
+    position: absolute;
+    width: 13rem;
+
+    &__circle {
+    height: 32px;
+    width: 100%;
+    filter: $filterMed;
+    animation: pulse 6s infinite;
+    z-index: -1;
+
+    &:nth-of-type(1) {
+    background: rgba(245, 74, 176, 0.636);
+    }
+
+    &:nth-of-type(2) {
+    background: rgba(143, 83, 234, 0.704);
+  }
+  }
+  }
+  
+  .space-btn:active .shine__circle {
+    background: #f859b9;
+  }
+  
+  #stars {
+    width: 200rem;
+    height: 200rem;
+    position: relative;
+    background: transparent;
+    
+    &::after {
+    content: "";
+    position: absolute;
+    top: -10rem;
+    left: -100rem;
+    width: 100%;
+    height: 100%;
+    animation: starRotate 90s linear infinite;
+   }
+
+   &::after {
+    background-image: radial-gradient(#ffffff 1px, transparent 1%);
+    background-size: 50px 50px;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 170%;
+    height: 500%;
+    animation: animateStar 90s linear infinite;
+  }
+
+  &::before {
+    background-image: radial-gradient(#ffffff 1px, transparent 1%);
+    background-size: 50px 50px;
+    opacity: 0.5;
+  }
+
+  }
+  
+  
+  @keyframes animateStar {
+    from {
+      transform: translateY(0);
+    }
+  
+    to {
+      transform: translateY(-135rem);
+    }
+  }
+  
+  @keyframes starRotate {
+    from {
+      transform: rotate(360deg);
+    }
+  
+    to {
+      transform: rotate(0);
+    }
+  }
+  
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+  
+    50% {
+      background-position: 100% 50%;
+    }
+  
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(0.75);
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+    }
+  
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+  
+    100% {
+      transform: scale(0.75);
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+  }

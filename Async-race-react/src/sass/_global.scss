@@ -1,0 +1,17 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+}
+
+.wrapper {
+    background-image: url('../../public/background/brick_wall3.jpeg');
+    width: 100vw; 
+    min-height: 100vh;
+    padding: 5rem;
+}
