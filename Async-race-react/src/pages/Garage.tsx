@@ -1,3 +1,3 @@
 export default function GaragePage() {
-  return <div>Garage page</div>;
+  return <div className="wrapper">Garage page</div>;
 }
