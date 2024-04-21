@@ -1,0 +1,14 @@
+@mixin position-column($horizontal, $vertical, $gap) {
+    display: flex;
+    justify-content: $vertical;
+    align-items: $horizontal;
+    flex-direction: column;
+    gap: $gap;
+}
+
+@mixin position-center($gap) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: $gap;
+}
