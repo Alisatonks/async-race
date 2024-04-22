@@ -1,3 +1,5 @@
+import Controls from '../components/garage/controls/Controls';
+
 export default function GaragePage() {
-  return <div>Garage page</div>;
+  return <Controls />;
 }

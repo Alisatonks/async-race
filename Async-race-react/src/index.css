@@ -9,6 +9,10 @@ body {
   font-family: "Montserrat", sans-serif;
 }
 
+main {
+  padding: 3rem 0;
+}
+
 .wrapper {
   background-image: url("../../public/background/brick_wall3.jpeg");
   width: 100vw;
@@ -242,4 +246,71 @@ body {
 
 .nav__link {
   text-decoration: none;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+.controls__group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.commonBtn {
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0.5em;
+  min-width: 70px;
+  letter-spacing: 0.08em;
+  position: relative;
+  font-family: inherit;
+  border-radius: 0.6em;
+  overflow: hidden;
+  transition: all 0.4s;
+  line-height: 1.4em;
+  border: 2px solid #9B7EDA;
+  background: linear-gradient(to right, rgba(155, 126, 218, 0.1) 1%, transparent 40%, transparent 60%, rgba(155, 126, 218, 0.1) 100%);
+  color: #9B7EDA;
+  box-shadow: inset 0 0 10px rgba(155, 126, 218, 0.4), 0 0 9px 3px rgba(155, 126, 218, 0.1);
+}
+.commonBtn:hover {
+  color: #BFA3F3;
+  box-shadow: inset 0 0 10px rgba(155, 126, 218, 0.6), 0 0 9px 3px rgba(155, 126, 218, 0.2);
+}
+.commonBtn:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -4em;
+  width: 4em;
+  height: 100%;
+  background: linear-gradient(to right, transparent 1%, rgba(155, 126, 218, 0.1) 40%, rgba(155, 126, 218, 0.1) 60%, transparent 100%);
+  transition: transform 0.4s ease-in-out;
+}
+.commonBtn:hover:before {
+  transform: translateX(15em);
+}
+
+.brand-input {
+  height: 40px;
+  padding: 10px;
+  background-color: #242425;
+  max-width: 200px;
+  text-align: center;
+  border: 2px solid white;
+  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.273);
+}
+.brand-input:focus {
+  color: rgb(0, 238, 255);
+  background-color: #242425;
+  outline-color: rgb(0, 238, 255);
+  box-shadow: -3px -3px 15px rgb(0, 238, 255);
+  transition: 0.2s;
+  transition-property: box-shadow;
 }/*# sourceMappingURL=index.css.map */

@@ -1,0 +1,20 @@
+.brand-input { 
+    height: 40px;
+    padding: 10px;
+    background-color: $background-dark;
+    max-width: 200px;
+    text-align: center;
+    border: 2px solid white;
+    border-radius: 5px;
+    color: $input-grey;
+
+    &:focus {
+    color: $light-blue;
+    background-color: $background-dark;
+    outline-color: $light-blue;
+    box-shadow: -3px -3px 15px $light-blue;
+    transition: 0.2s;
+    transition-property: box-shadow;
+  }
+  }
+  

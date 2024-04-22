@@ -1,0 +1,7 @@
+.controls {
+    @include position-line(space-between, center, 2rem);
+
+    &__group {
+        @include position-line(space-between, center, 1rem); 
+    }
+}

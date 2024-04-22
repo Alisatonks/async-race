@@ -12,3 +12,10 @@
     align-items: center;
     gap: $gap;
 }
+
+@mixin position-line($horizontal, $vertical, $gap) {
+    display: flex;
+    justify-content: $horizontal;
+    align-items: $vertical;
+    gap: $gap;
+}
