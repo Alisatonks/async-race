@@ -1,4 +1,5 @@
 .controls {
+    width: 100%;
     @include position-line(space-between, center, 2rem);
 
     &__group {

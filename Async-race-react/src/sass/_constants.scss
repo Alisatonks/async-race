@@ -9,3 +9,10 @@ $purple: #9B7EDA;
 $background-dark: #242425;
 $light-blue: rgb(0, 238, 255);
 $input-grey: rgba(255, 255, 255, 0.273);
+$text-light: #fee;
+
+//SHADOWS
+
+$purple-btn: inset 0 0 10px rgba(155, 126, 218, 0.4), 0 0 9px 3px rgba(155, 126, 218, 0.1);
+$purple-btn-hover: inset 0 0 10px rgba(155, 126, 218, 0.6), 0 0 9px 3px rgba(155, 126, 218, 0.2);
+$neon-text: 0 -40px 100px, 0 0 2px, 0 0 1em #ff4444, 0 0 0.5em #ff4444, 0 0 0.1em #ff4444, 0 10px 3px #000;
