@@ -446,4 +446,39 @@ main {
 }
 .small-btn:hover {
   box-shadow: inset 0 0 10px rgba(155, 126, 218, 0.6), 0 0 9px 3px rgba(155, 126, 218, 0.2);
+}
+
+.alert-container {
+  position: absolute;
+  top: 2rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+}
+
+.alert {
+  border: 1px solid #FF5630;
+  border-radius: 5px;
+  background-color: #FFE9D5;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+}
+.alert h4 {
+  color: #FF5630;
+}
+.alert button {
+  border: 1px solid #FF5630;
+  color: #FF5630;
+  border-radius: 4px;
+  width: 100%;
+  background: #FFE9D5;
+  padding: 0.5rem;
+  cursor: pointer;
 }/*# sourceMappingURL=index.css.map */
