@@ -4,12 +4,15 @@ import getCars from '../../../utils/api';
 import { Cars } from '../../../types';
 import Loader from '../../loader/Loader';
 import Alert from '../../alert/Alert';
+import CARS_PER_PAGE from '../../../utils/constants';
+import Pagination from '../../pagination/Pagination';
 
 export default function RaceBlock() {
   const [cars, setCars] = useState<Cars>([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const getAllCars = async () => {
@@ -30,6 +33,10 @@ export default function RaceBlock() {
     setOpen(false);
   };
 
+  const lastIndex = CARS_PER_PAGE * currentPage;
+  const firstIndex = lastIndex - CARS_PER_PAGE;
+  const carsOnPage = cars.slice(firstIndex, lastIndex);
+
   console.log(cars);
   console.log(error);
 
@@ -37,9 +44,15 @@ export default function RaceBlock() {
     <>
       {!isLoading && cars.length && (
         <div className="race">
-          {cars.map((el) => (
+          {carsOnPage.map((el) => (
             <CarBlock car={el} key={el.id} />
           ))}
+          <Pagination
+            pageName="garage"
+            numberOfCars={cars.length}
+            currentPage={currentPage}
+            setPage={setCurrentPage}
+          />
         </div>
       )}
       {isLoading && <Loader />}
