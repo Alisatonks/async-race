@@ -1,18 +1,23 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import GaragePage from './pages/Garage';
-import WinnersPage from './pages/Winners';
-import ErrorPage from './pages/Error';
+import { lazy, Suspense } from 'react';
 import DashboardLayout from './layouts/DashboardLayout';
+import Loader from './components/loader/Loader';
+
+const GaragePage = lazy(() => import('./pages/Garage'));
+const WinnersPage = lazy(() => import('./pages/Winners'));
+const ErrorPage = lazy(() => import('./pages/Error'));
 
 function App() {
   return (
     <BrowserRouter>
       <DashboardLayout>
-        <Routes>
-          <Route path="/" element={<GaragePage />} />
-          <Route path="winners" element={<WinnersPage />} />
-          <Route path="*" element={<ErrorPage />} />
-        </Routes>
+        <Suspense fallback={<Loader />}>
+          <Routes>
+            <Route path="/" element={<GaragePage />} />
+            <Route path="winners" element={<WinnersPage />} />
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+        </Suspense>
       </DashboardLayout>
     </BrowserRouter>
   );
