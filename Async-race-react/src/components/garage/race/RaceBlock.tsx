@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import CarBlock from './CarBlock';
-import getCars from '../../../utils/api';
+import { getCars } from '../../../utils/api';
 import { Cars } from '../../../types';
 import Loader from '../../loader/Loader';
 import Alert from '../../alert/Alert';
