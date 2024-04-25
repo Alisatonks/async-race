@@ -1,9 +1,10 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Car } from '../../../types';
 import Car2Svg from '../../car/car2Svg';
 import Finish from '../../svg/Finish';
 import { useDeleteCarMutation } from '../../../redux/slices/carsSlice';
 import { setSelectedCar } from '../../../redux/slices/selectedCarReducer';
+import { RootState } from '../../../redux/store';
 
 type Props = {
   car: Car;
@@ -16,7 +17,14 @@ export default function CarBlock(props: Props) {
 
   const dispatch = useDispatch();
 
+  const selectedCar = useSelector(
+    (state: RootState) => state.selectedCar.selectedCar
+  );
+
   const handleDelete = async () => {
+    if (car.id === selectedCar?.id) {
+      dispatch(setSelectedCar(null));
+    }
     await deleteCar(car.id);
   };
 

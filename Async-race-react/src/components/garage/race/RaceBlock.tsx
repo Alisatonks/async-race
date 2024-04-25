@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import CarBlock from './CarBlock';
 import Loader from '../../loader/Loader';
 import Alert from '../../alert/Alert';
-import CARS_PER_PAGE from '../../../utils/constants';
+import { CARS_PER_PAGE } from '../../../utils/constants';
 import Pagination from '../../pagination/Pagination';
 import { useGetAllCarsQuery } from '../../../redux/slices/carsSlice';
 

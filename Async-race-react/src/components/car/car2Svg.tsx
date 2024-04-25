@@ -7,7 +7,6 @@ export default function car2Svg(props: Props) {
   return (
     <svg
       width="90px"
-      height="auto"
       version="1.1"
       id="_x32_"
       xmlns="http://www.w3.org/2000/svg"

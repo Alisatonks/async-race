@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { CreatingCar } from '../../../types';
 import {
   useAddCarMutation,
+  useGetAllCarsQuery,
   useUpdateCarMutation,
 } from '../../../redux/slices/carsSlice';
 import { RootState } from '../../../redux/store';
@@ -14,6 +15,8 @@ type Props = {
 
 export default function Form(props: Props) {
   const { action } = props;
+
+  const { data: cars } = useGetAllCarsQuery();
   const {
     register,
     handleSubmit,
@@ -28,11 +31,11 @@ export default function Form(props: Props) {
   );
 
   useEffect(() => {
-    if (action === 'update' && selectedCar) {
-      setValue('name', selectedCar.name);
-      setValue('color', selectedCar.color);
+    if (action === 'update') {
+      setValue('name', selectedCar ? selectedCar.name : '');
+      setValue('color', selectedCar ? selectedCar.color : '#000000');
     }
-  }, [action, selectedCar, setValue]);
+  }, [action, selectedCar, setValue, cars]);
 
   const onSubmit = async (data: CreatingCar) => {
     if (action === 'create') {

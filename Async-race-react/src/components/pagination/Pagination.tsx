@@ -1,4 +1,4 @@
-import CARS_PER_PAGE from '../../utils/constants';
+import { CARS_PER_PAGE } from '../../utils/constants';
 import Back from '../svg/Back';
 import Forward from '../svg/Forward';
 
@@ -13,7 +13,12 @@ export default function Pagination(props: Props) {
   const { pageName, numberOfCars, currentPage, setPage } = props;
 
   const firstPage = currentPage === 1;
-  const lastPage = currentPage === Math.ceil(numberOfCars / CARS_PER_PAGE);
+  const totalPages = Math.ceil(numberOfCars / CARS_PER_PAGE);
+  const lastPage = currentPage === totalPages;
+
+  if (totalPages < currentPage) {
+    setPage(currentPage - 1);
+  }
 
   const iconColors = [
     firstPage ? 'rgba(255, 255, 255, 0.273)' : '#9B7EDA',

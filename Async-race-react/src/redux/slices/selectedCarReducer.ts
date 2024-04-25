@@ -13,7 +13,7 @@ export const selectedCarReducer = createSlice({
   name: 'selectedCar',
   initialState,
   reducers: {
-    setSelectedCar: (state, action: PayloadAction<Car>) => {
+    setSelectedCar: (state, action: PayloadAction<Car | null>) => {
       return {
         ...state,
         selectedCar: action.payload,
