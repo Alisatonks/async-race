@@ -4,5 +4,19 @@
 
     &__group {
         @include position-line(space-between, center, 1rem); 
+
+        .input-wrapper {
+            min-height: 80px;
+            position: relative;
+            @include position-column(center, center, 0.2rem);
+            
+            .error {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                color: $error;
+                font-size: 12px;
+            }
+        }
     }
 }

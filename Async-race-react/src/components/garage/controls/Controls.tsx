@@ -1,4 +1,4 @@
-import BoxWithInput from './BoxWithInput';
+import Form from './Form';
 
 export default function Controls() {
   return (
@@ -11,16 +11,8 @@ export default function Controls() {
           Reset
         </button>
       </div>
-      <BoxWithInput>
-        <button className="commonBtn" type="button">
-          Create
-        </button>
-      </BoxWithInput>
-      <BoxWithInput>
-        <button className="commonBtn" type="button">
-          Update
-        </button>
-      </BoxWithInput>
+      <Form action="create" />
+      <Form action="update" />
       <div className="controls__group">
         <button className="commonBtn" type="button">
           Generate cars

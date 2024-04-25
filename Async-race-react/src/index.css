@@ -325,6 +325,22 @@ main {
   align-items: center;
   gap: 1rem;
 }
+.controls__group .input-wrapper {
+  min-height: 80px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.controls__group .input-wrapper .error {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: #FF5630;
+  font-size: 12px;
+}
 
 .commonBtn {
   cursor: pointer;
@@ -390,7 +406,7 @@ main {
   justify-content: start;
   align-items: start;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0rem;
 }
 
 .car-block {

@@ -1,6 +1,9 @@
+import { useDispatch } from 'react-redux';
 import { Car } from '../../../types';
 import Car2Svg from '../../car/car2Svg';
 import Finish from '../../svg/Finish';
+import { useDeleteCarMutation } from '../../../redux/slices/carsSlice';
+import { setSelectedCar } from '../../../redux/slices/selectedCarReducer';
 
 type Props = {
   car: Car;
@@ -9,14 +12,26 @@ type Props = {
 export default function CarBlock(props: Props) {
   const { car } = props;
 
+  const [deleteCar] = useDeleteCarMutation();
+
+  const dispatch = useDispatch();
+
+  const handleDelete = async () => {
+    await deleteCar(car.id);
+  };
+
+  const handleSelectCar = () => {
+    dispatch(setSelectedCar(car));
+  };
+
   return (
     <div className="car-block">
       <div className="car-block__controls">
         <div className="car-block__btn-wrapper">
-          <button type="button" className="small-btn">
+          <button type="button" className="small-btn" onClick={handleSelectCar}>
             Select
           </button>
-          <button type="button" className="small-btn">
+          <button type="button" className="small-btn" onClick={handleDelete}>
             Remove
           </button>
           <h3>{car.name}</h3>
