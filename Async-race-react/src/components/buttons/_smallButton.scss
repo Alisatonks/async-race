@@ -13,3 +13,8 @@
         box-shadow: $purple-btn-hover;
     }
 }
+
+.small-btn.disabled {
+    border: 2px solid $input-grey;
+    color: $input-grey; 
+}

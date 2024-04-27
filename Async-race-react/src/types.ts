@@ -7,3 +7,14 @@ export type Car = {
 export type CreatingCar = Pick<Car, 'name' | 'color'>;
 
 export type Cars = Car[];
+
+export enum EngineStatus {
+  Started = 'started',
+  Stopped = 'stopped',
+  Drive = 'drive',
+}
+
+export type VelocityDistance = {
+  velocity: number;
+  distance: number;
+};

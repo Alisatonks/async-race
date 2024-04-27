@@ -36,7 +36,11 @@
         }
   }
   
- 
+  .commonBtn.disabled {
+    border: 2px solid $input-grey;
+    color: $input-grey;
+  }
+
   
  
   

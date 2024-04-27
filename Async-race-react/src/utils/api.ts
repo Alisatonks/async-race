@@ -1,16 +1,30 @@
-import { Car, CreatingCar } from '../types';
 import HOST_API from './config-global';
+import { EngineStatus, VelocityDistance } from '../types';
 
-async function createCar(car: CreatingCar): Promise<Car> {
-  const response = await fetch(`${HOST_API}/garage}`, {
-    method: 'POST',
+export async function startStopEngine(
+  id: number,
+  status: EngineStatus
+): Promise<VelocityDistance> {
+  const response = await fetch(`${HOST_API}/engine?id=${id}&status=${status}`, {
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(car),
   });
-  const newCar = await response.json();
-  return newCar;
+  const res = await response.json();
+  return res;
 }
 
-export default createCar;
+export async function startDriveMode(
+  id: number,
+  status: EngineStatus
+): Promise<number> {
+  const response = await fetch(`${HOST_API}/engine?id=${id}&status=${status}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const res = response.status;
+  return res;
+}
