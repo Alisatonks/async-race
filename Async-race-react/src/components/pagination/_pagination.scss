@@ -1,0 +1,22 @@
+.pagination {
+    width: 100%;
+    @include position-line(space-between, center, 2rem);
+    margin-top: 1rem;
+
+    h5 {
+        text-transform: uppercase;
+        color: $purple;
+        font-size: 18px;
+    }
+
+    .current-page-wrapper {
+        @include position-line(space-between, center, 0.5rem);
+        min-width: 150px;
+
+        button {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    }
+}

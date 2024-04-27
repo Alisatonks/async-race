@@ -1,3 +1,9 @@
+import RaceBlock from '../components/garage/race/RaceBlock';
+
 export default function GaragePage() {
-  return <div>Garage page</div>;
+  return (
+    <div className="garage-wrapper">
+      <RaceBlock />
+    </div>
+  );
 }

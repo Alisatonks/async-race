@@ -9,9 +9,13 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
+main {
+    padding: 2rem 0;
+}
+
 .wrapper {
     background-image: url('../../public/background/brick_wall3.jpeg');
     width: 100vw; 
     min-height: 100vh;
-    padding: 5rem;
+    padding: 4rem 5rem;
 }

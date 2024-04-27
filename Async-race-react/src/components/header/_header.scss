@@ -11,11 +11,10 @@
     }
     
 .neon-title__span{
-    font-family: "Vibur", cursive;
+    @extend %neon-text;
     font-weight: 400;
     font-size: 6rem;
-    color: #fee;
-    text-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #ff4444, 0 0 0.5em #ff4444, 0 0 0.1em #ff4444, 0 10px 3px #000;
+  
 }
     
 .neon-title__span span{
