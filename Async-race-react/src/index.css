@@ -20,7 +20,7 @@ main {
   padding: 4rem 5rem;
 }
 
-.car-block h3, .neon-title__span {
+.winner-modal h1, .winner-modal h2, .car-block h3, .neon-title__span {
   color: #fee;
   text-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #ff4444, 0 0 0.5em #ff4444, 0 0 0.1em #ff4444, 0 10px 3px #000;
   font-family: "Vibur", cursive;
@@ -533,4 +533,25 @@ main {
   background: none;
   border: none;
   cursor: pointer;
+}
+
+.winner-modal {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  top: 0;
+  left: 0;
+}
+.winner-modal h1, .winner-modal h2 {
+  text-align: center;
+}
+.winner-modal h1 {
+  font-size: 50px;
+}
+.winner-modal h2 {
+  font-size: 40px;
 }/*# sourceMappingURL=index.css.map */

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 function useAnimateCar(trackLength: number | undefined) {
-  const [finisher, setFinisher] = useState<boolean>(false);
+  const [finisher, setFinisher] = useState<number | undefined>();
 
   const carRef = useRef<HTMLDivElement | null>(null);
   const requestRef = useRef<number | null>(null);
@@ -26,7 +26,7 @@ function useAnimateCar(trackLength: number | undefined) {
         if (position < width) {
           requestRef.current = requestAnimationFrame(moveCarFrame);
         } else {
-          setFinisher(true);
+          setFinisher(Number(time.toFixed(2)));
         }
       }
     };

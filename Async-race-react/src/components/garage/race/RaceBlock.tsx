@@ -7,6 +7,8 @@ import Pagination from '../../pagination/Pagination';
 import { useGetAllCarsQuery } from '../../../redux/slices/carsSlice';
 import Form from '../controls/Form';
 import useCreate100Cars from '../../../customHooks/useCreate100Cars';
+import WinnerModal from './modal/WinnerModal';
+import { Finisher } from '../../../types';
 
 export default function RaceBlock() {
   const { data: cars, isLoading, error } = useGetAllCarsQuery();
@@ -16,8 +18,9 @@ export default function RaceBlock() {
 
   const [startRace, setStartRace] = useState(false);
   const [reset, setReset] = useState(false);
-  const [finishers, setFinishers] = useState<string[]>([]);
-  const [winner, setWinner] = useState<string | undefined>(undefined);
+  const [finishers, setFinishers] = useState<Finisher[]>([]);
+  const [winner, setWinner] = useState<Finisher | undefined>(undefined);
+  const [openWinnerModal, setOpenWinnerModal] = useState(false);
 
   const handleCloseAlert = () => {
     setOpenError(false);
@@ -31,7 +34,7 @@ export default function RaceBlock() {
 
   useEffect(() => {
     if (finishers.length && startRace && !winner) {
-      console.log(`Winner is ${finishers[0]}`);
+      setOpenWinnerModal(true);
       setWinner(finishers[0]);
     }
   }, [finishers, startRace, winner]);
@@ -56,8 +59,12 @@ export default function RaceBlock() {
     await createCarsPromise();
   };
 
-  const addFinisher = (finisher: string) => {
+  const addFinisher = (finisher: Finisher) => {
     setFinishers([...finishers, finisher]);
+  };
+
+  const handleCloseWinnerModal = () => {
+    setOpenWinnerModal(false);
   };
 
   return (
@@ -111,6 +118,9 @@ export default function RaceBlock() {
       )}
       {isLoading && <Loader />}
       {openError && <Alert handleCloseAlert={handleCloseAlert} />}
+      {openWinnerModal && winner && (
+        <WinnerModal winner={winner} handleClose={handleCloseWinnerModal} />
+      )}
     </>
   );
 }

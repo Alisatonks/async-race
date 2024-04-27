@@ -2,7 +2,7 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Car } from '../../../types';
+import { Car, Finisher } from '../../../types';
 import Car2Svg from '../../car/car2Svg';
 import Finish from '../../svg/Finish';
 import { useDeleteCarMutation } from '../../../redux/slices/carsSlice';
@@ -17,7 +17,7 @@ type Props = {
   startRace: boolean;
   reset: boolean;
   setReset: (reset: boolean) => void;
-  addFinisher: (finisher: string) => void;
+  addFinisher: (finisher: Finisher) => void;
 };
 
 export default function CarBlock(props: Props) {
@@ -47,7 +47,7 @@ export default function CarBlock(props: Props) {
 
   useEffect(() => {
     if (finisher) {
-      addFinisher(car.name);
+      addFinisher({ name: car.name, time: finisher });
     }
   }, [finisher]);
 
@@ -59,7 +59,7 @@ export default function CarBlock(props: Props) {
     stopCar();
     setReset(false);
     setIsMoving(false);
-    setFinisher(false);
+    setFinisher(undefined);
   }, [setFinisher, setReset, stopCar]);
 
   useEffect(() => {
@@ -112,7 +112,7 @@ export default function CarBlock(props: Props) {
               className={!isMoving ? 'small-btn disabled' : 'small-btn'}
               onClick={() => {
                 stopAnimation('stop');
-                setFinisher(false);
+                setFinisher(undefined);
               }}
               disabled={!isMoving}
             >

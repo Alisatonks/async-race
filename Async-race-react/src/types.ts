@@ -18,3 +18,14 @@ export type VelocityDistance = {
   velocity: number;
   distance: number;
 };
+
+export type Winner = {
+  id: number;
+  wins: number;
+  time: number;
+};
+
+export type Finisher = {
+  name: string;
+  time: number;
+};
