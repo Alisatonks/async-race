@@ -26,6 +26,13 @@ export type Winner = {
 };
 
 export type Finisher = {
+  id: number;
   name: string;
   time: number;
+};
+
+export type WinnerRecord = Pick<Winner, 'wins' | 'time'>;
+
+export type WinnersReducer = {
+  [key: number]: WinnerRecord;
 };

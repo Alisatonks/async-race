@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAddCarMutation } from '../redux/slices/carsSlice';
+import { useAddCarMutation } from '../redux/slices/requestsApi';
 import { CreatingCar } from '../types';
 import { CARS_BRANDS, CARS_MODELS } from '../utils/constants';
 

@@ -6,7 +6,7 @@ import {
   useAddCarMutation,
   useGetAllCarsQuery,
   useUpdateCarMutation,
-} from '../../../redux/slices/carsSlice';
+} from '../../../redux/slices/requestsApi';
 import { RootState } from '../../../redux/store';
 
 type Props = {

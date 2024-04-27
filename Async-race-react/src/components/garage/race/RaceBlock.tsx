@@ -4,18 +4,20 @@ import Loader from '../../loader/Loader';
 import Alert from '../../alert/Alert';
 import { CARS_PER_PAGE } from '../../../utils/constants';
 import Pagination from '../../pagination/Pagination';
-import { useGetAllCarsQuery } from '../../../redux/slices/carsSlice';
+import { useGetAllCarsQuery } from '../../../redux/slices/requestsApi';
 import Form from '../controls/Form';
 import useCreate100Cars from '../../../customHooks/useCreate100Cars';
 import WinnerModal from './modal/WinnerModal';
 import { Finisher } from '../../../types';
+import useHandleWinner from '../../../customHooks/useHandleWinner';
 
 export default function RaceBlock() {
   const { data: cars, isLoading, error } = useGetAllCarsQuery();
   const { createCarsPromise, isLoading: isGenerating } = useCreate100Cars();
+  const { handleWinner } = useHandleWinner();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [openError, setOpenError] = useState(false);
-
   const [startRace, setStartRace] = useState(false);
   const [reset, setReset] = useState(false);
   const [finishers, setFinishers] = useState<Finisher[]>([]);
@@ -36,8 +38,9 @@ export default function RaceBlock() {
     if (finishers.length && startRace && !winner) {
       setOpenWinnerModal(true);
       setWinner(finishers[0]);
+      handleWinner({ id: finishers[0].id, time: finishers[0].time });
     }
-  }, [finishers, startRace, winner]);
+  }, [finishers, handleWinner, startRace, winner]);
 
   const lastIndex = CARS_PER_PAGE * currentPage;
   const firstIndex = lastIndex - CARS_PER_PAGE;
@@ -113,6 +116,7 @@ export default function RaceBlock() {
             numberOfCars={cars.length}
             currentPage={currentPage}
             setPage={setCurrentPage}
+            handleReset={handleReset}
           />
         </div>
       )}

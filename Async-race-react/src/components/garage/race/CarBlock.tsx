@@ -5,7 +5,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Car, Finisher } from '../../../types';
 import Car2Svg from '../../car/car2Svg';
 import Finish from '../../svg/Finish';
-import { useDeleteCarMutation } from '../../../redux/slices/carsSlice';
+import {
+  useDeleteCarMutation,
+  useDeleteWinnerMutation,
+} from '../../../redux/slices/requestsApi';
 import { setSelectedCar } from '../../../redux/slices/selectedCarReducer';
 import { RootState } from '../../../redux/store';
 import useAnimateCar from '../../../customHooks/useAnimateCar';
@@ -45,9 +48,11 @@ export default function CarBlock(props: Props) {
     (state: RootState) => state.selectedCar.selectedCar
   );
 
+  const [deleteWinner] = useDeleteWinnerMutation();
+
   useEffect(() => {
     if (finisher) {
-      addFinisher({ name: car.name, time: finisher });
+      addFinisher({ id: car.id, name: car.name, time: finisher });
     }
   }, [finisher]);
 
@@ -79,6 +84,7 @@ export default function CarBlock(props: Props) {
       dispatch(setSelectedCar(null));
     }
     await deleteCar(car.id);
+    deleteWinner(car.id);
   };
 
   const handleSelectCar = () => {

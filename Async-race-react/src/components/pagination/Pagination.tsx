@@ -7,16 +7,18 @@ type Props = {
   numberOfCars: number;
   currentPage: number;
   setPage: (page: number) => void;
+  handleReset: () => void;
 };
 
 export default function Pagination(props: Props) {
-  const { pageName, numberOfCars, currentPage, setPage } = props;
+  const { pageName, numberOfCars, currentPage, setPage, handleReset } = props;
 
   const firstPage = currentPage === 1;
   const totalPages = Math.ceil(numberOfCars / CARS_PER_PAGE);
   const lastPage = currentPage === totalPages;
 
   if (totalPages < currentPage) {
+    handleReset();
     setPage(currentPage - 1);
   }
 
@@ -26,10 +28,12 @@ export default function Pagination(props: Props) {
   ];
 
   const handleForward = () => {
+    handleReset();
     setPage(currentPage + 1);
   };
 
   const handleBack = () => {
+    handleReset();
     setPage(currentPage - 1);
   };
 

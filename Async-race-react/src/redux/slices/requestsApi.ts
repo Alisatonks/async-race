@@ -1,11 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import HOST_API from '../../utils/config-global';
-import { Cars, CreatingCar, Car } from '../../types';
+import { Cars, CreatingCar, Car, Winner } from '../../types';
 
-export const carsApi = createApi({
-  reducerPath: 'carsApi',
+export const requestsApi = createApi({
+  reducerPath: 'requestsApi',
   baseQuery: fetchBaseQuery({ baseUrl: HOST_API }),
-  tagTypes: ['Car'],
+  tagTypes: ['Car', 'Winners'],
   endpoints: (builder) => ({
     getAllCars: builder.query<Cars, void>({
       query: () => 'garage',
@@ -34,6 +34,33 @@ export const carsApi = createApi({
       }),
       invalidatesTags: ['Car'],
     }),
+    getWinners: builder.query<Winner[], void>({
+      query: () => 'winners',
+      providesTags: ['Winners'],
+    }),
+    addWinner: builder.mutation<Winner, Winner>({
+      query: (winner) => ({
+        url: '/winners',
+        method: 'POST',
+        body: winner,
+      }),
+      invalidatesTags: ['Winners'],
+    }),
+    updateWinner: builder.mutation<Winner, Winner>({
+      query: ({ id, ...rest }) => ({
+        url: `/winners/${id}`,
+        method: 'PUT',
+        body: rest,
+      }),
+      invalidatesTags: ['Winners'],
+    }),
+    deleteWinner: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `/winners/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Winners'],
+    }),
   }),
 });
 
@@ -42,4 +69,8 @@ export const {
   useAddCarMutation,
   useDeleteCarMutation,
   useUpdateCarMutation,
-} = carsApi;
+  useGetWinnersQuery,
+  useAddWinnerMutation,
+  useUpdateWinnerMutation,
+  useDeleteWinnerMutation,
+} = requestsApi;
