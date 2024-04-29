@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import HOST_API from '../../utils/config-global';
-import { Cars, CreatingCar, Car, Winner } from '../../types';
+import { Cars, CreatingCar, Car, Winner, SortingParams } from '../../types';
 
 export const requestsApi = createApi({
   reducerPath: 'requestsApi',
@@ -34,8 +34,9 @@ export const requestsApi = createApi({
       }),
       invalidatesTags: ['Car'],
     }),
-    getWinners: builder.query<Winner[], void>({
-      query: () => 'winners',
+    getWinners: builder.query<Winner[], SortingParams | undefined>({
+      query: (params) =>
+        `winners?_sort=${params?.sortBy}&_order=${params?.order}`,
       providesTags: ['Winners'],
     }),
     addWinner: builder.mutation<Winner, Winner>({

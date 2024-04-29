@@ -1,13 +1,16 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { CreatingCar } from '../../../types';
 import {
   useAddCarMutation,
-  useGetAllCarsQuery,
   useUpdateCarMutation,
 } from '../../../redux/slices/requestsApi';
 import { RootState } from '../../../redux/store';
+import {
+  setInputCreate,
+  setInputUpdate,
+} from '../../../redux/slices/persistentStateReducer';
 
 type Props = {
   action: string;
@@ -16,11 +19,9 @@ type Props = {
 export default function Form(props: Props) {
   const { action } = props;
 
-  const { data: cars } = useGetAllCarsQuery();
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
     setValue,
   } = useForm<CreatingCar>();
@@ -29,23 +30,46 @@ export default function Form(props: Props) {
   const selectedCar = useSelector(
     (state: RootState) => state.selectedCar.selectedCar
   );
+  const inputColor = useSelector((state: RootState) =>
+    action === 'create'
+      ? state.persistentState.inputCreate?.color
+      : state.persistentState.inputUpdate?.color
+  );
+  const inputName = useSelector((state: RootState) =>
+    action === 'create'
+      ? state.persistentState.inputCreate?.brand
+      : state.persistentState.inputUpdate?.brand
+  );
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (action === 'update') {
-      setValue('name', selectedCar ? selectedCar.name : '');
-      setValue('color', selectedCar ? selectedCar.color : '#000000');
-    }
-  }, [action, selectedCar, setValue, cars]);
+    setValue('color', inputColor || '#000000');
+    setValue('name', inputName || '');
+  }, [inputColor, inputName, setValue]);
 
   const onSubmit = async (data: CreatingCar) => {
     if (action === 'create') {
       await addCar(data);
-      reset();
     }
     if (action === 'update' && selectedCar) {
-      const { name, color } = data;
-      if (name !== selectedCar.name || color !== selectedCar.color) {
-        await updateCar({ id: selectedCar.id, ...data });
+      await updateCar({ id: selectedCar.id, ...data });
+    }
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    if (action === 'create') {
+      if (name === 'color') {
+        dispatch(setInputCreate({ color: value }));
+      } else if (name === 'name') {
+        dispatch(setInputCreate({ brand: value }));
+      }
+    } else if (action === 'update') {
+      if (name === 'color') {
+        dispatch(setInputUpdate({ color: value }));
+      } else if (name === 'name') {
+        dispatch(setInputUpdate({ brand: value }));
       }
     }
   };
@@ -58,10 +82,11 @@ export default function Form(props: Props) {
           type="text"
           placeholder="Car brand"
           {...register('name', { required: true })}
+          onChange={handleInputChange}
         />
         {errors.name && <div className="error">This field is required</div>}
       </div>
-      <input type="color" {...register('color')} />
+      <input type="color" {...register('color')} onChange={handleInputChange} />
       <button className="commonBtn" type="submit">
         {action === 'create' ? 'Create' : 'Update'}
       </button>

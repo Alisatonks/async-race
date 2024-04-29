@@ -38,7 +38,12 @@ export default function RaceBlock() {
     if (finishers.length && startRace && !winner) {
       setOpenWinnerModal(true);
       setWinner(finishers[0]);
-      handleWinner({ id: finishers[0].id, time: finishers[0].time });
+      handleWinner({
+        id: finishers[0].id,
+        time: finishers[0].time,
+        color: finishers[0].color,
+        name: finishers[0].name,
+      });
     }
   }, [finishers, handleWinner, startRace, winner]);
 

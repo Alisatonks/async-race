@@ -5,7 +5,7 @@ import {
 } from '../redux/slices/requestsApi';
 
 const useHandleWinner = () => {
-  const { data: winners } = useGetWinnersQuery();
+  const { data: winners } = useGetWinnersQuery(undefined);
   const [addWinner] = useAddWinnerMutation();
   const [updateWinner] = useUpdateWinnerMutation();
 
@@ -14,11 +14,19 @@ const useHandleWinner = () => {
 
     if (winners) {
       if (winnerIndex === -1) {
-        addWinner({ id: winner.id, wins: 1, time: winner.time });
+        addWinner({
+          id: winner.id,
+          wins: 1,
+          time: winner.time,
+        });
       } else if (winnerIndex !== undefined && winnerIndex !== -1) {
         if (winner.time < winners[winnerIndex].time) {
           const wins = winners[winnerIndex].wins + 1;
-          updateWinner({ id: winner.id, wins, time: winner.time });
+          updateWinner({
+            id: winner.id,
+            wins,
+            time: winner.time,
+          });
         }
       }
     }

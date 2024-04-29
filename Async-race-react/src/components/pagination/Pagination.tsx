@@ -7,7 +7,7 @@ type Props = {
   numberOfCars: number;
   currentPage: number;
   setPage: (page: number) => void;
-  handleReset: () => void;
+  handleReset?: () => void;
 };
 
 export default function Pagination(props: Props) {
@@ -18,7 +18,9 @@ export default function Pagination(props: Props) {
   const lastPage = currentPage === totalPages;
 
   if (totalPages < currentPage) {
-    handleReset();
+    if (handleReset) {
+      handleReset();
+    }
     setPage(currentPage - 1);
   }
 
@@ -28,12 +30,16 @@ export default function Pagination(props: Props) {
   ];
 
   const handleForward = () => {
-    handleReset();
+    if (handleReset) {
+      handleReset();
+    }
     setPage(currentPage + 1);
   };
 
   const handleBack = () => {
-    handleReset();
+    if (handleReset) {
+      handleReset();
+    }
     setPage(currentPage - 1);
   };
 
@@ -52,3 +58,7 @@ export default function Pagination(props: Props) {
     </div>
   );
 }
+
+Pagination.defaultProps = {
+  handleReset: undefined,
+};

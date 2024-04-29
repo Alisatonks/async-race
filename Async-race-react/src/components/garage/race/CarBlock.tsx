@@ -14,6 +14,7 @@ import { RootState } from '../../../redux/store';
 import useAnimateCar from '../../../customHooks/useAnimateCar';
 import useTrackLength from '../../../customHooks/useTrackLength';
 import useAnimationLogic from '../../../customHooks/useAnimationLogic';
+import { setInputUpdate } from '../../../redux/slices/persistentStateReducer';
 
 type Props = {
   car: Car;
@@ -52,7 +53,12 @@ export default function CarBlock(props: Props) {
 
   useEffect(() => {
     if (finisher) {
-      addFinisher({ id: car.id, name: car.name, time: finisher });
+      addFinisher({
+        id: car.id,
+        name: car.name,
+        time: finisher,
+        color: car.color,
+      });
     }
   }, [finisher]);
 
@@ -89,6 +95,8 @@ export default function CarBlock(props: Props) {
 
   const handleSelectCar = () => {
     dispatch(setSelectedCar(car));
+    dispatch(setInputUpdate({ brand: car.name }));
+    dispatch(setInputUpdate({ color: car.color }));
   };
 
   return (

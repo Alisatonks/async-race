@@ -554,4 +554,31 @@ main {
 }
 .winner-modal h2 {
   font-size: 40px;
+}
+
+.winners-table-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 0;
+}
+.winners-table-wrapper table {
+  color: white;
+  width: 100%;
+  border: 1px solid #9B7EDA;
+  font-size: 18px;
+  border-radius: 4px;
+}
+.winners-table-wrapper table .sort {
+  cursor: pointer;
+}
+.winners-table-wrapper table tr {
+  text-align: center;
+  text-transform: uppercase;
+}
+.winners-table-wrapper table thead {
+  background-color: rgba(155, 126, 218, 0.4);
+  height: 35px;
 }/*# sourceMappingURL=index.css.map */
