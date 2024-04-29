@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import CarBlock from './CarBlock';
 import Loader from '../../loader/Loader';
 import Alert from '../../alert/Alert';
@@ -10,13 +11,17 @@ import useCreate100Cars from '../../../customHooks/useCreate100Cars';
 import WinnerModal from './modal/WinnerModal';
 import { Finisher } from '../../../types';
 import useHandleWinner from '../../../customHooks/useHandleWinner';
+import { RootState } from '../../../redux/store';
 
 export default function RaceBlock() {
   const { data: cars, isLoading, error } = useGetAllCarsQuery();
   const { createCarsPromise, isLoading: isGenerating } = useCreate100Cars();
   const { handleWinner } = useHandleWinner();
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = useSelector(
+    (state: RootState) => state.persistentState.currentPageGarage
+  );
+
   const [openError, setOpenError] = useState(false);
   const [startRace, setStartRace] = useState(false);
   const [reset, setReset] = useState(false);
@@ -41,8 +46,6 @@ export default function RaceBlock() {
       handleWinner({
         id: finishers[0].id,
         time: finishers[0].time,
-        color: finishers[0].color,
-        name: finishers[0].name,
       });
     }
   }, [finishers, handleWinner, startRace, winner]);
@@ -120,7 +123,6 @@ export default function RaceBlock() {
             pageName="garage"
             numberOfCars={cars.length}
             currentPage={currentPage}
-            setPage={setCurrentPage}
             handleReset={handleReset}
           />
         </div>

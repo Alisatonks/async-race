@@ -3,11 +3,15 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 interface PersistentState {
   inputCreate: { color: string; brand: string } | null;
   inputUpdate: { color: string; brand: string } | null;
+  currentPageGarage: number;
+  currentPageWinners: number;
 }
 
 const initialState: PersistentState = {
   inputCreate: null,
   inputUpdate: null,
+  currentPageGarage: 1,
+  currentPageWinners: 1,
 };
 
 export const persistentStateReducer = createSlice({
@@ -56,9 +60,25 @@ export const persistentStateReducer = createSlice({
         },
       };
     },
+    setCurrentPageGarage: (state, action: PayloadAction<number>) => {
+      return {
+        ...state,
+        currentPageGarage: action.payload,
+      };
+    },
+    setCurrentPageWinners: (state, action: PayloadAction<number>) => {
+      return {
+        ...state,
+        currentPageWinners: action.payload,
+      };
+    },
   },
 });
 
-export const { setInputCreate, setInputUpdate } =
-  persistentStateReducer.actions;
+export const {
+  setInputCreate,
+  setInputUpdate,
+  setCurrentPageGarage,
+  setCurrentPageWinners,
+} = persistentStateReducer.actions;
 export default persistentStateReducer.reducer;

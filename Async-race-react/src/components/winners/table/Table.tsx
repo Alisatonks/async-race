@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useGetWinnersQuery } from '../../../redux/slices/requestsApi';
 import Pagination from '../../pagination/Pagination';
 import TableRow from './TableRow';
 import { WINNERS_PER_PAGE } from '../../../utils/constants';
 import { SortBy, SortingOrder } from '../../../types';
+import { RootState } from '../../../redux/store';
 
 export default function Table() {
   const [sortBy, setSortBy] = useState<SortBy | undefined>(undefined);
@@ -13,8 +15,9 @@ export default function Table() {
     sortBy,
   });
 
-  const [currentPage, setCurrentPage] = useState(1);
-
+  const currentPage = useSelector(
+    (state: RootState) => state.persistentState.currentPageWinners
+  );
   const lastIndex = WINNERS_PER_PAGE * currentPage;
   const firstIndex = lastIndex - WINNERS_PER_PAGE;
   const winnersOnPage = winners ? winners.slice(firstIndex, lastIndex) : [];
@@ -66,10 +69,9 @@ export default function Table() {
       </table>
       {winners && (
         <Pagination
-          pageName="Winners"
+          pageName="winners"
           numberOfCars={winners.length}
           currentPage={currentPage}
-          setPage={setCurrentPage}
         />
       )}
     </div>
