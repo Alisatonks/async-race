@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import CarBlock from './CarBlock';
 import Loader from '../../loader/Loader';
 import Alert from '../../alert/Alert';
-import { CARS_PER_PAGE } from '../../../utils/constants';
 import Pagination from '../../pagination/Pagination';
 import { useGetAllCarsQuery } from '../../../redux/slices/requestsApi';
 import Form from '../controls/Form';
@@ -14,13 +13,14 @@ import useHandleWinner from '../../../customHooks/useHandleWinner';
 import { RootState } from '../../../redux/store';
 
 export default function RaceBlock() {
-  const { data: cars, isLoading, error } = useGetAllCarsQuery();
-  const { createCarsPromise, isLoading: isGenerating } = useCreate100Cars();
-  const { handleWinner } = useHandleWinner();
-
   const currentPage = useSelector(
     (state: RootState) => state.persistentState.currentPageGarage
   );
+  const { data, isLoading, error, refetch } = useGetAllCarsQuery(currentPage);
+  const cars = data?.carsData;
+  const totalCars = Number(data?.totalCars);
+
+  const { createCarsPromise, isLoading: isGenerating } = useCreate100Cars();
 
   const [openError, setOpenError] = useState(false);
   const [startRace, setStartRace] = useState(false);
@@ -28,17 +28,30 @@ export default function RaceBlock() {
   const [finishers, setFinishers] = useState<Finisher[]>([]);
   const [winner, setWinner] = useState<Finisher | undefined>(undefined);
   const [openWinnerModal, setOpenWinnerModal] = useState(false);
+  const [stopEngines, setStopEngines] = useState(false);
 
+  const { handleWinner } = useHandleWinner();
   const handleCloseAlert = () => {
     setOpenError(false);
   };
+
+  useEffect(() => {
+    refetch();
+  }, [currentPage, refetch]);
 
   useEffect(() => {
     if (error) {
       setOpenError(true);
     }
   }, [error]);
-
+  console.log(
+    'finishers.length',
+    finishers.length,
+    'startRace',
+    startRace,
+    '!winner',
+    !winner
+  );
   useEffect(() => {
     if (finishers.length && startRace && !winner) {
       setOpenWinnerModal(true);
@@ -50,10 +63,6 @@ export default function RaceBlock() {
     }
   }, [finishers, handleWinner, startRace, winner]);
 
-  const lastIndex = CARS_PER_PAGE * currentPage;
-  const firstIndex = lastIndex - CARS_PER_PAGE;
-  const carsOnPage = cars ? cars.slice(firstIndex, lastIndex) : [];
-
   const handleStartRace = () => {
     setStartRace(true);
     setWinner(undefined);
@@ -61,9 +70,13 @@ export default function RaceBlock() {
   };
 
   const handleReset = () => {
-    setStartRace(false);
     setReset(true);
     setFinishers([]);
+  };
+
+  const handleResetRace = () => {
+    handleReset();
+    setStopEngines(true);
   };
 
   const generate100Cars = async () => {
@@ -90,7 +103,7 @@ export default function RaceBlock() {
           >
             Race
           </button>
-          <button className="commonBtn" type="button" onClick={handleReset}>
+          <button className="commonBtn" type="button" onClick={handleResetRace}>
             Reset
           </button>
         </div>
@@ -107,9 +120,9 @@ export default function RaceBlock() {
           </button>
         </div>
       </div>
-      {cars && cars.length && (
+      {cars && (
         <div className="race">
-          {carsOnPage.map((el) => (
+          {cars.map((el) => (
             <CarBlock
               car={el}
               key={el.id}
@@ -117,11 +130,14 @@ export default function RaceBlock() {
               reset={reset}
               setReset={setReset}
               addFinisher={addFinisher}
+              setStartRace={setStartRace}
+              stopEngines={stopEngines}
+              setStopEngines={setStopEngines}
             />
           ))}
           <Pagination
             pageName="garage"
-            numberOfCars={cars.length}
+            numberOfCars={totalCars}
             currentPage={currentPage}
             handleReset={handleReset}
           />

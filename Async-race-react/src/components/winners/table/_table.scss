@@ -8,6 +8,7 @@
         border: 1px solid $purple;
         font-size: 18px;
         border-radius: 4px;
+        table-layout: fixed;
 
         .sort {
             cursor: pointer;
@@ -16,11 +17,16 @@
         tr {
             text-align: center;
             text-transform: uppercase;
+            height: 67px;
         }
 
         thead {
             background-color:  rgba(155, 126, 218, 0.4);
             height: 35px;
+        }
+
+        div{
+            @include position-line(center, center, 0.5rem)
         }
     }
 }

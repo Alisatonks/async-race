@@ -3,24 +3,25 @@ import { useSelector } from 'react-redux';
 import { useGetWinnersQuery } from '../../../redux/slices/requestsApi';
 import Pagination from '../../pagination/Pagination';
 import TableRow from './TableRow';
-import { WINNERS_PER_PAGE } from '../../../utils/constants';
 import { SortBy, SortingOrder } from '../../../types';
 import { RootState } from '../../../redux/store';
+import ArrowDown from '../../svg/ArrowDown';
+import ArrowUp from '../../svg/ArrowUp';
 
 export default function Table() {
   const [sortBy, setSortBy] = useState<SortBy | undefined>(undefined);
   const [order, setOrder] = useState<SortingOrder | undefined>(undefined);
-  const { data: winners, refetch } = useGetWinnersQuery({
+  const currentPage = useSelector(
+    (state: RootState) => state.persistentState.currentPageWinners
+  );
+  const { data, refetch } = useGetWinnersQuery({
+    currentPage,
     order,
     sortBy,
   });
 
-  const currentPage = useSelector(
-    (state: RootState) => state.persistentState.currentPageWinners
-  );
-  const lastIndex = WINNERS_PER_PAGE * currentPage;
-  const firstIndex = lastIndex - WINNERS_PER_PAGE;
-  const winnersOnPage = winners ? winners.slice(firstIndex, lastIndex) : [];
+  const winners = data?.winData;
+  const totalWinners = Number(data?.totalWin);
 
   useEffect(() => {
     refetch();
@@ -53,24 +54,37 @@ export default function Table() {
             <th>Car</th>
             <th>Name</th>
             <th onClick={sortByWins} className="sort">
-              Wins
+              <div>
+                Wins
+                {order === SortingOrder.decr && <ArrowDown />}
+                {order === SortingOrder.asc && <ArrowUp />}
+              </div>
             </th>
             <th onClick={sortByTime} className="sort">
-              Best time
+              <div>
+                Best time (sec)
+                {order === SortingOrder.decr && <ArrowDown />}
+                {order === SortingOrder.asc && <ArrowUp />}
+              </div>
             </th>
           </tr>
         </thead>
         <tbody>
           {winners &&
-            winnersOnPage.map((winner, index) => (
-              <TableRow index={index} winner={winner} key={winner.id} />
+            winners.map((winner, index) => (
+              <TableRow
+                index={index}
+                winner={winner}
+                key={winner.id}
+                currentPage={currentPage}
+              />
             ))}
         </tbody>
       </table>
       {winners && (
         <Pagination
           pageName="winners"
-          numberOfCars={winners.length}
+          numberOfCars={totalWinners}
           currentPage={currentPage}
         />
       )}

@@ -14,12 +14,12 @@ const useAnimationLogic = (
       if (!type) {
         pauseCar();
       }
-      try {
-        await startStopEngine(carId, EngineStatus.Stopped);
-      } catch (e) {
-        console.log(e);
-      }
       if (type === 'stop') {
+        try {
+          await startStopEngine(carId, EngineStatus.Stopped);
+        } catch (e) {
+          console.log(e);
+        }
         stopCar();
         setIsMoving(false);
       }

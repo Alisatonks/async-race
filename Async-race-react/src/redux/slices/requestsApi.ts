@@ -1,14 +1,21 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import HOST_API from '../../utils/config-global';
-import { Cars, CreatingCar, Car, Winner, SortingParams } from '../../types';
+import { Cars, CreatingCar, Car, Winner, Params, TotCars } from '../../types';
+import { CARS_PER_PAGE, WINNERS_PER_PAGE } from '../../utils/constants';
 
 export const requestsApi = createApi({
   reducerPath: 'requestsApi',
   baseQuery: fetchBaseQuery({ baseUrl: HOST_API }),
   tagTypes: ['Car', 'Winners'],
   endpoints: (builder) => ({
-    getAllCars: builder.query<Cars, void>({
-      query: () => 'garage',
+    getAllCars: builder.query<{ carsData: Cars; totalCars: TotCars }, number>({
+      query: (currentPage) =>
+        `garage?_page=${currentPage}&_limit=${CARS_PER_PAGE}`,
+      transformResponse: (response, meta) => {
+        const totalCars = meta?.response?.headers.get('X-Total-Count');
+        const carsData: Cars = response as Cars;
+        return { carsData, totalCars };
+      },
       providesTags: ['Car'],
     }),
     addCar: builder.mutation<Car, CreatingCar>({
@@ -34,11 +41,18 @@ export const requestsApi = createApi({
       }),
       invalidatesTags: ['Car'],
     }),
-    getWinners: builder.query<Winner[], SortingParams | undefined>({
-      query: (params) =>
-        `winners?_sort=${params?.sortBy}&_order=${params?.order}`,
-      providesTags: ['Winners'],
-    }),
+    getWinners: builder.query<{ winData: Winner[]; totalWin: TotCars }, Params>(
+      {
+        query: (params) =>
+          `winners?_page=${params?.currentPage}&_limit=${WINNERS_PER_PAGE}&_sort=${params?.sortBy}&_order=${params?.order}`,
+        transformResponse: (response, meta) => {
+          const totalWin = meta?.response?.headers.get('X-Total-Count');
+          const winData: Winner[] = response as Winner[];
+          return { winData, totalWin };
+        },
+        providesTags: ['Winners'],
+      }
+    ),
     addWinner: builder.mutation<Winner, Winner>({
       query: (winner) => ({
         url: '/winners',

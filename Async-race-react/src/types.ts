@@ -48,7 +48,10 @@ export type WinnersReducer = {
   [key: number]: WinnerRecord;
 };
 
-export type SortingParams = {
+export type Params = {
+  currentPage: number;
   sortBy?: SortBy;
   order?: SortingOrder;
 };
+
+export type TotCars = string | null | undefined;

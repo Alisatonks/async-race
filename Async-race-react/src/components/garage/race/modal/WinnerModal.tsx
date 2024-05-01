@@ -19,6 +19,9 @@ function WinnerModal(props: Props) {
       <div>
         <h1>{`The winner is ${name}`}</h1>
         <h2>{`Time: ${time}`}</h2>
+        <button type="button" onClick={handleClose}>
+          Close
+        </button>
       </div>
     </div>
   );

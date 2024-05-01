@@ -1,20 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Car, Finisher } from '../../../types';
+import { Car, EngineStatus, Finisher } from '../../../types';
 import Car2Svg from '../../car/car2Svg';
 import Finish from '../../svg/Finish';
-import {
-  useDeleteCarMutation,
-  useDeleteWinnerMutation,
-} from '../../../redux/slices/requestsApi';
 import { setSelectedCar } from '../../../redux/slices/selectedCarReducer';
-import { RootState } from '../../../redux/store';
 import useAnimateCar from '../../../customHooks/useAnimateCar';
 import useTrackLength from '../../../customHooks/useTrackLength';
 import useAnimationLogic from '../../../customHooks/useAnimationLogic';
 import { setInputUpdate } from '../../../redux/slices/persistentStateReducer';
+import { startStopEngine } from '../../../utils/api';
+import useDeleteCar from '../../../customHooks/useDeleteCar';
 
 type Props = {
   car: Car;
@@ -22,17 +19,28 @@ type Props = {
   reset: boolean;
   setReset: (reset: boolean) => void;
   addFinisher: (finisher: Finisher) => void;
+  setStartRace: (startRace: boolean) => void;
+  stopEngines: boolean;
+  setStopEngines: (stopEngines: boolean) => void;
 };
 
 export default function CarBlock(props: Props) {
-  const { car, startRace, reset, setReset, addFinisher } = props;
+  const {
+    car,
+    startRace,
+    reset,
+    setReset,
+    addFinisher,
+    setStartRace,
+    stopEngines,
+    setStopEngines,
+  } = props;
 
   const [isMoving, setIsMoving] = useState(false);
 
   const trackRef = useRef<HTMLDivElement>(null);
   const carRef = useRef<HTMLDivElement>(null);
 
-  const [deleteCar] = useDeleteCarMutation();
   const dispatch = useDispatch();
   const trackLength = useTrackLength(trackRef);
   const { moveCar, setCarRef, stopCar, pauseCar, finisher, setFinisher } =
@@ -44,12 +52,7 @@ export default function CarBlock(props: Props) {
     stopCar,
     setIsMoving
   );
-
-  const selectedCar = useSelector(
-    (state: RootState) => state.selectedCar.selectedCar
-  );
-
-  const [deleteWinner] = useDeleteWinnerMutation();
+  const { handleDeleteCar } = useDeleteCar();
 
   useEffect(() => {
     if (finisher) {
@@ -67,10 +70,28 @@ export default function CarBlock(props: Props) {
   }, [setCarRef]);
 
   const resetCarBlock = useCallback(() => {
-    stopCar();
-    setReset(false);
-    setIsMoving(false);
     setFinisher(undefined);
+    setStartRace(false);
+    const stopEngine = async () => {
+      const handleReset = () => {
+        stopCar();
+        setReset(false);
+        setIsMoving(false);
+        setStopEngines(false);
+      };
+      if (stopEngines) {
+        try {
+          await startStopEngine(car.id, EngineStatus.Stopped);
+          handleReset();
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        handleReset();
+      }
+    };
+
+    stopEngine();
   }, [setFinisher, setReset, stopCar]);
 
   useEffect(() => {
@@ -85,14 +106,6 @@ export default function CarBlock(props: Props) {
     }
   }, [resetCarBlock, reset]);
 
-  const handleDelete = async () => {
-    if (car.id === selectedCar?.id) {
-      dispatch(setSelectedCar(null));
-    }
-    await deleteCar(car.id);
-    deleteWinner(car.id);
-  };
-
   const handleSelectCar = () => {
     dispatch(setSelectedCar(car));
     dispatch(setInputUpdate({ brand: car.name }));
@@ -106,7 +119,13 @@ export default function CarBlock(props: Props) {
           <button type="button" className="small-btn" onClick={handleSelectCar}>
             Select
           </button>
-          <button type="button" className="small-btn" onClick={handleDelete}>
+          <button
+            type="button"
+            className="small-btn"
+            onClick={() => {
+              handleDeleteCar(car.id);
+            }}
+          >
             Remove
           </button>
           <h3>{car.name}</h3>

@@ -24,8 +24,9 @@ export default function Pagination(props: Props) {
     numberOfCars / (pageName === 'garage' ? CARS_PER_PAGE : WINNERS_PER_PAGE)
   );
   const lastPage = currentPage === totalPages;
+  console.log(numberOfCars);
 
-  if (totalPages < currentPage) {
+  if (totalPages < currentPage && currentPage !== 1) {
     if (handleReset) {
       handleReset();
     }
