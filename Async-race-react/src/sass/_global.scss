@@ -11,12 +11,14 @@ body {
 
 main {
     padding: 2rem 0;
+    width: 100%;
 }
 
 .wrapper {
     background-image: url('../../public/background/brick_wall3.jpeg');
     min-height: 100vh;
-    padding: 4rem 5rem;
+    padding: 4rem 5rem 2rem 5rem;
+    @include position-column(start, start, 0.5rem);
     @include tablet{
         padding: 1.2rem;
     }
