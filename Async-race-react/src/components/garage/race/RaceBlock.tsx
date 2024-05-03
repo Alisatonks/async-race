@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CarBlock from './CarBlock';
 import Loader from '../../loader/Loader';
-import Alert from '../../alert/Alert';
 import Pagination from '../../pagination/Pagination';
 import { useGetAllCarsQuery } from '../../../redux/slices/requestsApi';
 import Form from '../controls/Form';
@@ -14,6 +13,7 @@ import { RootState } from '../../../redux/store';
 import { setStartRace } from '../../../redux/slices/persistentStateReducer';
 import { startStopEngine } from '../../../utils/api';
 import useDeleteStoreValues from '../../../customHooks/useDeleteStoreValues';
+import { setError } from '../../../redux/slices/errorReducer';
 
 export default function RaceBlock() {
   const currentPage = useSelector(
@@ -29,8 +29,6 @@ export default function RaceBlock() {
   const dispatch = useDispatch();
 
   const { createCarsPromise, isLoading: isGenerating } = useCreate100Cars();
-
-  const [openError, setOpenError] = useState(false);
   const [reset, setReset] = useState(false);
   const [finishers, setFinishers] = useState<Finisher[]>([]);
   const [winner, setWinner] = useState<Finisher | undefined>(undefined);
@@ -38,9 +36,6 @@ export default function RaceBlock() {
   const [isResetting, setIsResetting] = useState(false);
 
   const { handleWinner } = useHandleWinner();
-  const handleCloseAlert = () => {
-    setOpenError(false);
-  };
 
   const { deleteStoreValues } = useDeleteStoreValues();
 
@@ -50,9 +45,11 @@ export default function RaceBlock() {
 
   useEffect(() => {
     if (error) {
-      setOpenError(true);
+      dispatch(
+        setError(typeof error === 'string' ? error : 'Something went wrong')
+      );
     }
-  }, [error]);
+  }, [dispatch, error]);
 
   useEffect(() => {
     if (finishers.length && startRace && !winner) {
@@ -84,7 +81,7 @@ export default function RaceBlock() {
       );
       await Promise.all(stopPromises);
     } catch (e) {
-      console.error('Failed to stop all engines:', e);
+      dispatch(setError(typeof e === 'string' ? e : 'Something went wrong'));
     } finally {
       setIsResetting(false);
     }
@@ -161,7 +158,6 @@ export default function RaceBlock() {
         </div>
       )}
       {isLoading && <Loader />}
-      {openError && <Alert handleCloseAlert={handleCloseAlert} />}
       {openWinnerModal && winner && (
         <WinnerModal winner={winner} handleClose={handleCloseWinnerModal} />
       )}

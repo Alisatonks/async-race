@@ -8,6 +8,7 @@ import {
   setStatuses,
 } from '../redux/slices/persistentStateReducer';
 import { RootState } from '../redux/store';
+import { setError } from '../redux/slices/errorReducer';
 
 const useAnimationLogic = (
   carId: number,
@@ -33,11 +34,6 @@ const useAnimationLogic = (
         pauseCar();
       }
       if (type === 'stop') {
-        // try {
-        //   await startStopEngine(carId, EngineStatus.Stopped);
-        // } catch (e) {
-        //   console.log(e);
-        // }
         stopCar();
         dispatch(setVelocity({ id: carId, velocity: undefined }));
       }
@@ -53,7 +49,7 @@ const useAnimationLogic = (
         stopAnimation();
       }
     } catch (e) {
-      console.log(e);
+      throw new Error(typeof e === 'string' ? e : 'Something went wrong');
     }
   }, [carId, stopAnimation]);
 
@@ -74,7 +70,9 @@ const useAnimationLogic = (
             dispatch(setDistance({ id: carId, distance: res.distance }));
           }
         } catch (e) {
-          console.log(e);
+          dispatch(
+            setError(typeof e === 'string' ? e : 'Something went wrong')
+          );
         }
       }
     },
