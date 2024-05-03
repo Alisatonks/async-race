@@ -57,7 +57,7 @@ function useAnimateCar(trackLength: number | undefined, id: number) {
 
     const moveCarFrame = () => {
       if (carRef.current && carRef.current.parentElement?.offsetWidth) {
-        const width = Number(carRef.current.parentElement?.offsetWidth) - 64;
+        const width = Number(carRef.current.parentElement?.offsetWidth) - 80;
         positionRef.current += width / time / 60;
         carRef.current.style.transform = `translateX(${positionRef.current}px)`;
         if (positionRef.current < width) {

@@ -2,6 +2,10 @@
     width: 100%;
     @include position-line(space-between, center, 2rem);
 
+    @include responsive-transform {
+        @include position-column(start, start, 0.5rem)
+    }
+
     &__group {
         @include position-line(space-between, center, 1rem); 
 
@@ -9,6 +13,9 @@
             min-height: 80px;
             position: relative;
             @include position-column(center, center, 0.2rem);
+            @include responsive-transform {
+                min-height: auto;
+            }
             
             .error {
                 position: absolute;
@@ -18,5 +25,6 @@
                 font-size: 12px;
             }
         }
+        
     }
 }

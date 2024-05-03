@@ -23,6 +23,9 @@
 
     &__finish {
         margin-right: 4rem;
+        @include big-mobile {
+            margin-right: 3rem;
+        }
     }
 
     h3 {
