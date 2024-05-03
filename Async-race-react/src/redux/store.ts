@@ -1,17 +1,19 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { carsApi } from './slices/carsSlice';
+import { requestsApi } from './slices/requestsApi';
 import { selectedCarReducer } from './slices/selectedCarReducer';
+import { persistentStateReducer } from './slices/persistentStateReducer';
 
 const rootReducer = combineReducers({
-  carsApi: carsApi.reducer,
+  requestsApi: requestsApi.reducer,
   selectedCar: selectedCarReducer.reducer,
+  persistentState: persistentStateReducer.reducer,
 });
 
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(carsApi.middleware),
+    getDefaultMiddleware().concat(requestsApi.middleware),
 });
 
 setupListeners(store.dispatch);

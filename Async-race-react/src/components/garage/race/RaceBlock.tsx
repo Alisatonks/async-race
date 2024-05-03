@@ -1,30 +1,52 @@
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import CarBlock from './CarBlock';
 import Loader from '../../loader/Loader';
 import Alert from '../../alert/Alert';
-import { CARS_PER_PAGE } from '../../../utils/constants';
 import Pagination from '../../pagination/Pagination';
-import { useGetAllCarsQuery } from '../../../redux/slices/carsSlice';
+import { useGetAllCarsQuery } from '../../../redux/slices/requestsApi';
 import Form from '../controls/Form';
 import useCreate100Cars from '../../../customHooks/useCreate100Cars';
 import WinnerModal from './modal/WinnerModal';
-import { Finisher } from '../../../types';
+import { EngineStatus, Finisher } from '../../../types';
+import useHandleWinner from '../../../customHooks/useHandleWinner';
+import { RootState } from '../../../redux/store';
+import { setStartRace } from '../../../redux/slices/persistentStateReducer';
+import { startStopEngine } from '../../../utils/api';
+import useDeleteStoreValues from '../../../customHooks/useDeleteStoreValues';
 
 export default function RaceBlock() {
-  const { data: cars, isLoading, error } = useGetAllCarsQuery();
-  const { createCarsPromise, isLoading: isGenerating } = useCreate100Cars();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [openError, setOpenError] = useState(false);
+  const currentPage = useSelector(
+    (state: RootState) => state.persistentState.currentPageGarage
+  );
+  const startRace = useSelector(
+    (state: RootState) => state.persistentState.startRace
+  );
 
-  const [startRace, setStartRace] = useState(false);
+  const { data, isLoading, error, refetch } = useGetAllCarsQuery(currentPage);
+  const cars = data?.carsData;
+  const totalCars = Number(data?.totalCars);
+  const dispatch = useDispatch();
+
+  const { createCarsPromise, isLoading: isGenerating } = useCreate100Cars();
+
+  const [openError, setOpenError] = useState(false);
   const [reset, setReset] = useState(false);
   const [finishers, setFinishers] = useState<Finisher[]>([]);
   const [winner, setWinner] = useState<Finisher | undefined>(undefined);
   const [openWinnerModal, setOpenWinnerModal] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
+  const { handleWinner } = useHandleWinner();
   const handleCloseAlert = () => {
     setOpenError(false);
   };
+
+  const { deleteStoreValues } = useDeleteStoreValues();
+
+  useEffect(() => {
+    refetch();
+  }, [currentPage, refetch]);
 
   useEffect(() => {
     if (error) {
@@ -36,23 +58,43 @@ export default function RaceBlock() {
     if (finishers.length && startRace && !winner) {
       setOpenWinnerModal(true);
       setWinner(finishers[0]);
+      handleWinner({
+        id: finishers[0].id,
+        time: finishers[0].time,
+      });
     }
-  }, [finishers, startRace, winner]);
-
-  const lastIndex = CARS_PER_PAGE * currentPage;
-  const firstIndex = lastIndex - CARS_PER_PAGE;
-  const carsOnPage = cars ? cars.slice(firstIndex, lastIndex) : [];
+  }, [finishers, handleWinner, startRace, winner]);
 
   const handleStartRace = () => {
-    setStartRace(true);
+    dispatch(setStartRace(true));
     setWinner(undefined);
-    setFinishers([]);
   };
 
   const handleReset = () => {
-    setStartRace(false);
     setReset(true);
     setFinishers([]);
+    deleteStoreValues();
+  };
+
+  async function stopEnginesPr(array: { id: number }[]) {
+    try {
+      setIsResetting(true);
+      const stopPromises = array.map((car) =>
+        startStopEngine(car.id, EngineStatus.Stopped)
+      );
+      await Promise.all(stopPromises);
+    } catch (e) {
+      console.error('Failed to stop all engines:', e);
+    } finally {
+      setIsResetting(false);
+    }
+  }
+
+  const handleResetRace = () => {
+    handleReset();
+    if (cars) {
+      stopEnginesPr(cars);
+    }
   };
 
   const generate100Cars = async () => {
@@ -72,15 +114,17 @@ export default function RaceBlock() {
       <div className="controls">
         <div className="controls__group">
           <button
-            className={startRace ? 'commonBtn disabled' : 'commonBtn'}
+            className={
+              startRace || isResetting ? 'commonBtn disabled' : 'commonBtn'
+            }
             type="button"
             onClick={handleStartRace}
-            disabled={startRace}
+            disabled={startRace || isResetting}
           >
             Race
           </button>
-          <button className="commonBtn" type="button" onClick={handleReset}>
-            Reset
+          <button className="commonBtn" type="button" onClick={handleResetRace}>
+            {isResetting ? '...Resetting' : 'Reset'}
           </button>
         </div>
         <Form action="create" />
@@ -96,9 +140,9 @@ export default function RaceBlock() {
           </button>
         </div>
       </div>
-      {cars && cars.length && (
+      {cars && (
         <div className="race">
-          {carsOnPage.map((el) => (
+          {cars.map((el) => (
             <CarBlock
               car={el}
               key={el.id}
@@ -110,9 +154,9 @@ export default function RaceBlock() {
           ))}
           <Pagination
             pageName="garage"
-            numberOfCars={cars.length}
+            numberOfCars={totalCars}
             currentPage={currentPage}
-            setPage={setCurrentPage}
+            handleReset={handleReset}
           />
         </div>
       )}

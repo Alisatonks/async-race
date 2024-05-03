@@ -14,6 +14,7 @@
     background: linear-gradient(to right, rgba(155, 126, 218, 0.1) 1%, transparent 40%, transparent 60%, rgba(155, 126, 218, 0.1) 100%);
     color: $purple;
     box-shadow: $purple-btn;
+    min-width: 124px;
 
         &:hover {
             color: #BFA3F3;

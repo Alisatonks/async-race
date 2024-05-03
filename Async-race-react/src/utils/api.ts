@@ -1,5 +1,5 @@
 import HOST_API from './config-global';
-import { EngineStatus, VelocityDistance } from '../types';
+import { Car, EngineStatus, VelocityDistance, Winner } from '../types';
 
 export async function startStopEngine(
   id: number,
@@ -27,4 +27,16 @@ export async function startDriveMode(
   });
   const res = response.status;
   return res;
+}
+
+export async function getWinner(id: number): Promise<Winner> {
+  const response = await fetch(`${HOST_API}/winners/${id}`);
+  const data = await response.json();
+  return data;
+}
+
+export async function getCar(id: number): Promise<Car> {
+  const response = await fetch(`${HOST_API}/garage/${id}`);
+  const data = await response.json();
+  return data;
 }

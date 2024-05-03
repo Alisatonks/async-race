@@ -1,23 +1,43 @@
-import { CARS_PER_PAGE } from '../../utils/constants';
+import { useDispatch } from 'react-redux';
+import { CARS_PER_PAGE, WINNERS_PER_PAGE } from '../../utils/constants';
 import Back from '../svg/Back';
 import Forward from '../svg/Forward';
+import {
+  setCurrentPageGarage,
+  setCurrentPageWinners,
+} from '../../redux/slices/persistentStateReducer';
+import useDeleteStoreValues from '../../customHooks/useDeleteStoreValues';
 
 type Props = {
   pageName: string;
   numberOfCars: number;
   currentPage: number;
-  setPage: (page: number) => void;
+  handleReset?: () => void;
 };
 
 export default function Pagination(props: Props) {
-  const { pageName, numberOfCars, currentPage, setPage } = props;
+  const { pageName, numberOfCars, currentPage, handleReset } = props;
+
+  const dispatch = useDispatch();
+
+  const { deleteStoreValues } = useDeleteStoreValues();
 
   const firstPage = currentPage === 1;
-  const totalPages = Math.ceil(numberOfCars / CARS_PER_PAGE);
+  const totalPages = Math.ceil(
+    numberOfCars / (pageName === 'garage' ? CARS_PER_PAGE : WINNERS_PER_PAGE)
+  );
   const lastPage = currentPage === totalPages;
 
-  if (totalPages < currentPage) {
-    setPage(currentPage - 1);
+  if (totalPages < currentPage && currentPage !== 1) {
+    if (handleReset) {
+      deleteStoreValues();
+      handleReset();
+    }
+    if (pageName === 'garage') {
+      dispatch(setCurrentPageGarage(currentPage - 1));
+    } else if (pageName === 'winners') {
+      dispatch(setCurrentPageWinners(currentPage - 1));
+    }
   }
 
   const iconColors = [
@@ -26,11 +46,27 @@ export default function Pagination(props: Props) {
   ];
 
   const handleForward = () => {
-    setPage(currentPage + 1);
+    if (handleReset) {
+      handleReset();
+      deleteStoreValues();
+    }
+    if (pageName === 'garage') {
+      dispatch(setCurrentPageGarage(currentPage + 1));
+    } else if (pageName === 'winners') {
+      dispatch(setCurrentPageWinners(currentPage + 1));
+    }
   };
 
   const handleBack = () => {
-    setPage(currentPage - 1);
+    if (handleReset) {
+      handleReset();
+      deleteStoreValues();
+    }
+    if (pageName === 'garage') {
+      dispatch(setCurrentPageGarage(currentPage - 1));
+    } else if (pageName === 'winners') {
+      dispatch(setCurrentPageWinners(currentPage - 1));
+    }
   };
 
   return (
@@ -48,3 +84,7 @@ export default function Pagination(props: Props) {
     </div>
   );
 }
+
+Pagination.defaultProps = {
+  handleReset: undefined,
+};

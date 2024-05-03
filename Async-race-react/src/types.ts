@@ -14,6 +14,16 @@ export enum EngineStatus {
   Drive = 'drive',
 }
 
+export enum SortBy {
+  time = 'time',
+  wins = 'wins',
+}
+
+export enum SortingOrder {
+  asc = 'ASC',
+  decr = 'DESC',
+}
+
 export type VelocityDistance = {
   velocity: number;
   distance: number;
@@ -26,6 +36,22 @@ export type Winner = {
 };
 
 export type Finisher = {
-  name: string;
+  id: number;
   time: number;
+  color: string;
+  name: string;
 };
+
+export type WinnerRecord = Pick<Winner, 'wins' | 'time'>;
+
+export type WinnersReducer = {
+  [key: number]: WinnerRecord;
+};
+
+export type Params = {
+  currentPage: number;
+  sortBy?: SortBy;
+  order?: SortingOrder;
+};
+
+export type TotCars = string | null | undefined;

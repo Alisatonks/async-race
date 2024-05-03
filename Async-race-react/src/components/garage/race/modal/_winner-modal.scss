@@ -6,6 +6,10 @@
     top:0;
     left:0;
 
+    div{
+        @include position-column(center, center, 2rem);
+    }
+
     h1, h2{
         @extend %neon-text;
         text-align: center;
@@ -19,4 +23,13 @@
         font-size: 40px; 
     }
 
+    button {
+        @extend %neon-text;
+        font-size: 30px; 
+        background-color: $background-dark;
+        border-radius: 8px;
+        border: 2px solid white;
+        padding: 0 1rem;
+        cursor: pointer;
+    }
 }

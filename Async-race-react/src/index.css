@@ -20,7 +20,7 @@ main {
   padding: 4rem 5rem;
 }
 
-.winner-modal h1, .winner-modal h2, .car-block h3, .neon-title__span {
+.winner-modal button, .winner-modal h1, .winner-modal h2, .car-block h3, .neon-title__span {
   color: #fee;
   text-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #ff4444, 0 0 0.5em #ff4444, 0 0 0.1em #ff4444, 0 10px 3px #000;
   font-family: "Vibur", cursive;
@@ -358,6 +358,7 @@ main {
   background: linear-gradient(to right, rgba(155, 126, 218, 0.1) 1%, transparent 40%, transparent 60%, rgba(155, 126, 218, 0.1) 100%);
   color: #9B7EDA;
   box-shadow: inset 0 0 10px rgba(155, 126, 218, 0.4), 0 0 9px 3px rgba(155, 126, 218, 0.1);
+  min-width: 124px;
 }
 .commonBtn:hover {
   color: #BFA3F3;
@@ -546,6 +547,13 @@ main {
   top: 0;
   left: 0;
 }
+.winner-modal div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 2rem;
+}
 .winner-modal h1, .winner-modal h2 {
   text-align: center;
 }
@@ -554,4 +562,47 @@ main {
 }
 .winner-modal h2 {
   font-size: 40px;
+}
+.winner-modal button {
+  font-size: 30px;
+  background-color: #242425;
+  border-radius: 8px;
+  border: 2px solid white;
+  padding: 0 1rem;
+  cursor: pointer;
+}
+
+.winners-table-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 0;
+}
+.winners-table-wrapper table {
+  color: white;
+  width: 100%;
+  border: 1px solid #9B7EDA;
+  font-size: 18px;
+  border-radius: 4px;
+  table-layout: fixed;
+}
+.winners-table-wrapper table .sort {
+  cursor: pointer;
+}
+.winners-table-wrapper table tr {
+  text-align: center;
+  text-transform: uppercase;
+  height: 67px;
+}
+.winners-table-wrapper table thead {
+  background-color: rgba(155, 126, 218, 0.4);
+  height: 35px;
+}
+.winners-table-wrapper table div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
 }/*# sourceMappingURL=index.css.map */
