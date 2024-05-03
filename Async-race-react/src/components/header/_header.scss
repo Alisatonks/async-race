@@ -1,6 +1,7 @@
 .header {
     display: flex;
     gap: 2rem;
+    width: 100%;
     @include tablet{
         @include position-column(center, center, 0.5rem);
     }

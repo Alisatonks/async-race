@@ -17,12 +17,18 @@ body {
 
 main {
   padding: 2rem 0;
+  width: 100%;
 }
 
 .wrapper {
   background-image: url("../../public/background/brick_wall3.jpeg");
   min-height: 100vh;
-  padding: 4rem 5rem;
+  padding: 4rem 5rem 2rem 5rem;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 @media (max-width: 800px) {
   .wrapper {
@@ -248,6 +254,7 @@ main {
 .header {
   display: flex;
   gap: 2rem;
+  width: 100%;
 }
 @media (max-width: 800px) {
   .header {
@@ -656,4 +663,24 @@ main {
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+}
+
+footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+}
+footer a {
+  text-decoration: none;
+}
+footer h5, footer p {
+  float: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: white;
+  font-size: 16px;
+  text-align: center;
 }/*# sourceMappingURL=index.css.map */
