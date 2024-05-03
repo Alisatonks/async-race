@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useGetWinnersQuery } from '../../../redux/slices/requestsApi';
 import Pagination from '../../pagination/Pagination';
 import TableRow from './TableRow';
@@ -7,12 +7,22 @@ import { SortBy, SortingOrder } from '../../../types';
 import { RootState } from '../../../redux/store';
 import ArrowDown from '../../svg/ArrowDown';
 import ArrowUp from '../../svg/ArrowUp';
+import {
+  setSortingOrder,
+  setSortingBy,
+} from '../../../redux/slices/persistentStateReducer';
 
 export default function Table() {
-  const [sortBy, setSortBy] = useState<SortBy | undefined>(undefined);
-  const [order, setOrder] = useState<SortingOrder | undefined>(undefined);
+  const dispatch = useDispatch();
+
   const currentPage = useSelector(
     (state: RootState) => state.persistentState.currentPageWinners
+  );
+  const sortBy = useSelector(
+    (state: RootState) => state.persistentState.sortingBy
+  );
+  const order = useSelector(
+    (state: RootState) => state.persistentState.sortingOrder
   );
   const { data, refetch } = useGetWinnersQuery({
     currentPage,
@@ -27,22 +37,22 @@ export default function Table() {
     refetch();
   }, [order, refetch]);
 
-  const setSortingOrder = () => {
+  const setSortOrder = () => {
     if (order === SortingOrder.asc) {
-      setOrder(SortingOrder.decr);
+      dispatch(setSortingOrder(SortingOrder.decr));
     } else {
-      setOrder(SortingOrder.asc);
+      dispatch(setSortingOrder(SortingOrder.asc));
     }
   };
 
   const sortByTime = () => {
-    setSortingOrder();
-    setSortBy(SortBy.time);
+    setSortOrder();
+    dispatch(setSortingBy(SortBy.time));
   };
 
   const sortByWins = () => {
-    setSortingOrder();
-    setSortBy(SortBy.wins);
+    setSortOrder();
+    dispatch(setSortingBy(SortBy.wins));
   };
 
   return (
@@ -56,15 +66,23 @@ export default function Table() {
             <th onClick={sortByWins} className="sort">
               <div>
                 Wins
-                {order === SortingOrder.decr && <ArrowDown />}
-                {order === SortingOrder.asc && <ArrowUp />}
+                {order === SortingOrder.decr && sortBy === SortBy.wins && (
+                  <ArrowDown />
+                )}
+                {order === SortingOrder.asc && sortBy === SortBy.wins && (
+                  <ArrowUp />
+                )}
               </div>
             </th>
             <th onClick={sortByTime} className="sort">
               <div>
                 Best time (sec)
-                {order === SortingOrder.decr && <ArrowDown />}
-                {order === SortingOrder.asc && <ArrowUp />}
+                {order === SortingOrder.decr && sortBy === SortBy.time && (
+                  <ArrowDown />
+                )}
+                {order === SortingOrder.asc && sortBy === SortBy.time && (
+                  <ArrowUp />
+                )}
               </div>
             </th>
           </tr>

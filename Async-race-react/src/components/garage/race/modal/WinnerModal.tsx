@@ -15,7 +15,7 @@ function WinnerModal(props: Props) {
   }, 4000);
 
   return (
-    <div className="winner-modal" onClick={handleClose} role="button">
+    <div className="winner-modal" role="button">
       <div>
         <h1>{`The winner is ${name}`}</h1>
         <h2>{`Time: ${time}`}</h2>

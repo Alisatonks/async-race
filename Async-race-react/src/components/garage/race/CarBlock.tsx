@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useDispatch } from 'react-redux';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useEffect, useRef } from 'react';
 import { Car, EngineStatus, Finisher } from '../../../types';
 import Car2Svg from '../../car/car2Svg';
 import Finish from '../../svg/Finish';
@@ -9,9 +9,17 @@ import { setSelectedCar } from '../../../redux/slices/selectedCarReducer';
 import useAnimateCar from '../../../customHooks/useAnimateCar';
 import useTrackLength from '../../../customHooks/useTrackLength';
 import useAnimationLogic from '../../../customHooks/useAnimationLogic';
-import { setInputUpdate } from '../../../redux/slices/persistentStateReducer';
+import {
+  setInputUpdate,
+  setStatuses,
+  setVelocity,
+  setDistance,
+  setCarsPositions,
+  setMovingCars,
+} from '../../../redux/slices/persistentStateReducer';
 import { startStopEngine } from '../../../utils/api';
 import useDeleteCar from '../../../customHooks/useDeleteCar';
+import { RootState } from '../../../redux/store';
 
 type Props = {
   car: Car;
@@ -19,24 +27,18 @@ type Props = {
   reset: boolean;
   setReset: (reset: boolean) => void;
   addFinisher: (finisher: Finisher) => void;
-  setStartRace: (startRace: boolean) => void;
-  stopEngines: boolean;
-  setStopEngines: (stopEngines: boolean) => void;
 };
 
 export default function CarBlock(props: Props) {
-  const {
-    car,
-    startRace,
-    reset,
-    setReset,
-    addFinisher,
-    setStartRace,
-    stopEngines,
-    setStopEngines,
-  } = props;
+  const { car, startRace, reset, setReset, addFinisher } = props;
 
-  const [isMoving, setIsMoving] = useState(false);
+  const carsStatuses = useSelector(
+    (state: RootState) => state.persistentState.statuses
+  );
+
+  const movingCars = useSelector(
+    (state: RootState) => state.persistentState.movingCars
+  );
 
   const trackRef = useRef<HTMLDivElement>(null);
   const carRef = useRef<HTMLDivElement>(null);
@@ -44,13 +46,12 @@ export default function CarBlock(props: Props) {
   const dispatch = useDispatch();
   const trackLength = useTrackLength(trackRef);
   const { moveCar, setCarRef, stopCar, pauseCar, finisher, setFinisher } =
-    useAnimateCar(trackLength);
+    useAnimateCar(trackLength, car.id);
   const { stopAnimation, startAnimation } = useAnimationLogic(
     car.id,
     moveCar,
     pauseCar,
-    stopCar,
-    setIsMoving
+    stopCar
   );
   const { handleDeleteCar } = useDeleteCar();
 
@@ -71,32 +72,15 @@ export default function CarBlock(props: Props) {
 
   const resetCarBlock = useCallback(() => {
     setFinisher(undefined);
-    setStartRace(false);
-    const stopEngine = async () => {
-      const handleReset = () => {
-        stopCar();
-        setReset(false);
-        setIsMoving(false);
-        setStopEngines(false);
-      };
-      if (stopEngines) {
-        try {
-          await startStopEngine(car.id, EngineStatus.Stopped);
-          handleReset();
-        } catch (e) {
-          console.log(e);
-        }
-      } else {
-        handleReset();
-      }
-    };
-
-    stopEngine();
+    stopCar();
+    setReset(false);
   }, [setFinisher, setReset, stopCar]);
 
   useEffect(() => {
-    if (startRace) {
-      startAnimation();
+    if (startRace || movingCars[car.id]) {
+      if (!carsStatuses[car.id]) {
+        startAnimation(trackLength);
+      }
     }
   }, [startRace]);
 
@@ -104,12 +88,27 @@ export default function CarBlock(props: Props) {
     if (reset) {
       resetCarBlock();
     }
-  }, [resetCarBlock, reset]);
+  }, [reset]);
 
   const handleSelectCar = () => {
     dispatch(setSelectedCar(car));
     dispatch(setInputUpdate({ brand: car.name }));
     dispatch(setInputUpdate({ color: car.color }));
+  };
+
+  const handleStopCar = async () => {
+    setFinisher(undefined);
+    try {
+      await startStopEngine(car.id, EngineStatus.Stopped);
+      stopAnimation('stop');
+      dispatch(setMovingCars({ id: car.id, isMoving: undefined }));
+      dispatch(setStatuses({ id: car.id, status: undefined }));
+      dispatch(setVelocity({ id: car.id, velocity: undefined }));
+      dispatch(setDistance({ id: car.id, distance: undefined }));
+      dispatch(setCarsPositions({ id: car.id, position: undefined }));
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -134,20 +133,24 @@ export default function CarBlock(props: Props) {
           <div className="car-block__btn-wrapper">
             <button
               type="button"
-              className={isMoving ? 'small-btn disabled' : 'small-btn'}
-              onClick={startAnimation}
-              disabled={isMoving}
+              className={
+                movingCars[car.id] ? 'small-btn disabled' : 'small-btn'
+              }
+              onClick={() => {
+                startAnimation(trackLength);
+                dispatch(setMovingCars({ id: car.id, isMoving: true }));
+              }}
+              disabled={movingCars[car.id]}
             >
               A
             </button>
             <button
               type="button"
-              className={!isMoving ? 'small-btn disabled' : 'small-btn'}
-              onClick={() => {
-                stopAnimation('stop');
-                setFinisher(undefined);
-              }}
-              disabled={!isMoving}
+              className={
+                !movingCars[car.id] ? 'small-btn disabled' : 'small-btn'
+              }
+              onClick={handleStopCar}
+              disabled={!movingCars[car.id]}
             >
               B
             </button>

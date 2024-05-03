@@ -6,6 +6,7 @@ import {
   setCurrentPageGarage,
   setCurrentPageWinners,
 } from '../../redux/slices/persistentStateReducer';
+import useDeleteStoreValues from '../../customHooks/useDeleteStoreValues';
 
 type Props = {
   pageName: string;
@@ -19,15 +20,17 @@ export default function Pagination(props: Props) {
 
   const dispatch = useDispatch();
 
+  const { deleteStoreValues } = useDeleteStoreValues();
+
   const firstPage = currentPage === 1;
   const totalPages = Math.ceil(
     numberOfCars / (pageName === 'garage' ? CARS_PER_PAGE : WINNERS_PER_PAGE)
   );
   const lastPage = currentPage === totalPages;
-  console.log(numberOfCars);
 
   if (totalPages < currentPage && currentPage !== 1) {
     if (handleReset) {
+      deleteStoreValues();
       handleReset();
     }
     if (pageName === 'garage') {
@@ -45,6 +48,7 @@ export default function Pagination(props: Props) {
   const handleForward = () => {
     if (handleReset) {
       handleReset();
+      deleteStoreValues();
     }
     if (pageName === 'garage') {
       dispatch(setCurrentPageGarage(currentPage + 1));
@@ -56,6 +60,7 @@ export default function Pagination(props: Props) {
   const handleBack = () => {
     if (handleReset) {
       handleReset();
+      deleteStoreValues();
     }
     if (pageName === 'garage') {
       dispatch(setCurrentPageGarage(currentPage - 1));

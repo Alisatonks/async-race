@@ -1,30 +1,49 @@
 import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { EngineStatus } from '../types';
 import { startDriveMode, startStopEngine } from '../utils/api';
+import {
+  setVelocity,
+  setDistance,
+  setStatuses,
+} from '../redux/slices/persistentStateReducer';
+import { RootState } from '../redux/store';
 
 const useAnimationLogic = (
   carId: number,
-  moveCar: (velocity: number, disrance: number) => void,
+  moveCar: (
+    velocity: number,
+    distance: number,
+    trackLength: number | undefined
+  ) => void,
   pauseCar: () => void,
-  stopCar: () => void,
-  setIsMoving: (isMoving: boolean) => void
+  stopCar: () => void
 ) => {
+  const dispatch = useDispatch();
+  const carsVelocity = useSelector(
+    (state: RootState) => state.persistentState.velocity
+  );
+  const carsDistance = useSelector(
+    (state: RootState) => state.persistentState.distance
+  );
+
   const stopAnimation = useCallback(
     async (type?: string) => {
       if (!type) {
         pauseCar();
       }
       if (type === 'stop') {
-        try {
-          await startStopEngine(carId, EngineStatus.Stopped);
-        } catch (e) {
-          console.log(e);
-        }
+        // try {
+        //   await startStopEngine(carId, EngineStatus.Stopped);
+        // } catch (e) {
+        //   console.log(e);
+        // }
         stopCar();
-        setIsMoving(false);
+        dispatch(setVelocity({ id: carId, velocity: undefined }));
       }
+      dispatch(setStatuses({ id: carId, status: 1 }));
     },
-    [carId, pauseCar, stopCar, setIsMoving]
+    [pauseCar, stopCar, dispatch, carId]
   );
 
   const driveRequest = useCallback(async () => {
@@ -38,18 +57,29 @@ const useAnimationLogic = (
     }
   }, [carId, stopAnimation]);
 
-  const startAnimation = useCallback(async () => {
-    try {
-      setIsMoving(true);
-      const res = await startStopEngine(carId, EngineStatus.Started);
-      if (res) {
-        moveCar(res.distance, res.velocity);
-        driveRequest();
+  const startAnimation = useCallback(
+    async (trackLength: number | undefined) => {
+      if (
+        carsVelocity[carId] !== undefined &&
+        carsDistance[carId] !== undefined
+      ) {
+        moveCar(carsDistance[carId]!, carsVelocity[carId]!, trackLength);
+      } else {
+        try {
+          const res = await startStopEngine(carId, EngineStatus.Started);
+          if (res) {
+            moveCar(res.distance, res.velocity, trackLength);
+            driveRequest();
+            dispatch(setVelocity({ id: carId, velocity: res.velocity }));
+            dispatch(setDistance({ id: carId, distance: res.distance }));
+          }
+        } catch (e) {
+          console.log(e);
+        }
       }
-    } catch (e) {
-      console.log(e);
-    }
-  }, [carId, moveCar, setIsMoving, driveRequest]);
+    },
+    [carId, carsDistance, carsVelocity, dispatch, driveRequest, moveCar]
+  );
 
   return { stopAnimation, startAnimation };
 };
