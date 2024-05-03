@@ -19,3 +19,27 @@
     align-items: $vertical;
     gap: $gap;
 }
+
+@mixin responsive-transform {
+    @media (max-width: $responsive-transform) { @content; }
+}
+
+@mixin small-desktop {
+    @media (max-width: $small-desktop-width) { @content; }
+}
+
+@mixin big-tablet {
+    @media (max-width: $big-tablet) { @content; }
+}
+
+@mixin tablet {
+    @media (max-width: $tablet-width) { @content; }
+}
+
+@mixin small-tablet {
+    @media (max-width: $small-tablet) { @content; }
+}
+
+@mixin big-mobile {
+    @media (max-width: $big-mobile) { @content; }
+}

@@ -1,4 +1,8 @@
 .race {
     width: 100%;
     padding: 0.5rem 0;
+    
+    @include responsive-transform {
+        padding: 2rem 0;
+    }
 } 

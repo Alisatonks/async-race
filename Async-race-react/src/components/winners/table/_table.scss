@@ -9,6 +9,9 @@
         font-size: 18px;
         border-radius: 4px;
         table-layout: fixed;
+        @include big-mobile {
+           table-layout: auto;
+        }
 
         .sort {
             cursor: pointer;

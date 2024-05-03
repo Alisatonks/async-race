@@ -1,3 +1,9 @@
+.winner-modal button, .winner-modal h1, .winner-modal h2, .car-block h3, .neon-title__span {
+  color: #fee;
+  text-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #ff4444, 0 0 0.5em #ff4444, 0 0 0.1em #ff4444, 0 10px 3px #000;
+  font-family: "Vibur", cursive;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -15,15 +21,13 @@ main {
 
 .wrapper {
   background-image: url("../../public/background/brick_wall3.jpeg");
-  width: 100vw;
   min-height: 100vh;
   padding: 4rem 5rem;
 }
-
-.winner-modal button, .winner-modal h1, .winner-modal h2, .car-block h3, .neon-title__span {
-  color: #fee;
-  text-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #ff4444, 0 0 0.5em #ff4444, 0 0 0.1em #ff4444, 0 10px 3px #000;
-  font-family: "Vibur", cursive;
+@media (max-width: 800px) {
+  .wrapper {
+    padding: 1.2rem;
+  }
 }
 
 .loader-wrapper {
@@ -245,6 +249,15 @@ main {
   display: flex;
   gap: 2rem;
 }
+@media (max-width: 800px) {
+  .header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
 
 .neon-title {
   width: 100%;
@@ -303,6 +316,15 @@ main {
   flex-direction: column;
   gap: 1rem;
 }
+@media (max-width: 800px) {
+  .nav__ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    flex-direction: row;
+  }
+}
 
 .nav__li {
   list-style: none;
@@ -319,6 +341,15 @@ main {
   align-items: center;
   gap: 2rem;
 }
+@media (max-width: 1400px) {
+  .controls {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
 .controls__group {
   display: flex;
   justify-content: space-between;
@@ -333,6 +364,11 @@ main {
   align-items: center;
   flex-direction: column;
   gap: 0.2rem;
+}
+@media (max-width: 1400px) {
+  .controls__group .input-wrapper {
+    min-height: auto;
+  }
 }
 .controls__group .input-wrapper .error {
   position: absolute;
@@ -406,6 +442,11 @@ main {
   width: 100%;
   padding: 0.5rem 0;
 }
+@media (max-width: 1400px) {
+  .race {
+    padding: 2rem 0;
+  }
+}
 
 .garage-wrapper {
   display: flex;
@@ -449,6 +490,11 @@ main {
 }
 .car-block__finish {
   margin-right: 4rem;
+}
+@media (max-width: 555px) {
+  .car-block__finish {
+    margin-right: 3rem;
+  }
 }
 .car-block h3 {
   font-size: 25px;
@@ -587,6 +633,11 @@ main {
   font-size: 18px;
   border-radius: 4px;
   table-layout: fixed;
+}
+@media (max-width: 555px) {
+  .winners-table-wrapper table {
+    table-layout: auto;
+  }
 }
 .winners-table-wrapper table .sort {
   cursor: pointer;

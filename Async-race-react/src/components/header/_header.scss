@@ -1,6 +1,9 @@
 .header {
     display: flex;
     gap: 2rem;
+    @include tablet{
+        @include position-column(center, center, 0.5rem);
+    }
 }
 
 
@@ -60,6 +63,10 @@
 
 .nav__ul {
     @include position-column(start, start, 1rem);
+    @include tablet{
+        @include position-line(space-between, center, 0.5rem);
+        flex-direction: row;
+    }
 }
 
 .nav__li {
