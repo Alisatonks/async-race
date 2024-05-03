@@ -6,6 +6,7 @@ import {
 import { RootState } from '../redux/store';
 import { setSelectedCar } from '../redux/slices/selectedCarReducer';
 import { getWinner } from '../utils/api';
+import { setError } from '../redux/slices/errorReducer';
 
 export default function useDeleteCar() {
   const [deleteCar] = useDeleteCarMutation();
@@ -27,7 +28,7 @@ export default function useDeleteCar() {
           deleteWinner(id);
         }
       } catch (e) {
-        console.log(e);
+        dispatch(setError(typeof e === 'string' ? e : 'Something went wrong'));
       }
     };
     handleWinner();

@@ -20,6 +20,7 @@ import {
 import { startStopEngine } from '../../../utils/api';
 import useDeleteCar from '../../../customHooks/useDeleteCar';
 import { RootState } from '../../../redux/store';
+import { setError } from '../../../redux/slices/errorReducer';
 
 type Props = {
   car: Car;
@@ -107,7 +108,7 @@ export default function CarBlock(props: Props) {
       dispatch(setDistance({ id: car.id, distance: undefined }));
       dispatch(setCarsPositions({ id: car.id, position: undefined }));
     } catch (e) {
-      console.log(e);
+      dispatch(setError(typeof e === 'string' ? e : 'Something went wrong'));
     }
   };
 

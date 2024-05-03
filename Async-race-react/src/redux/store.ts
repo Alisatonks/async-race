@@ -3,11 +3,13 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import { requestsApi } from './slices/requestsApi';
 import { selectedCarReducer } from './slices/selectedCarReducer';
 import { persistentStateReducer } from './slices/persistentStateReducer';
+import { errorReducer } from './slices/errorReducer';
 
 const rootReducer = combineReducers({
   requestsApi: requestsApi.reducer,
   selectedCar: selectedCarReducer.reducer,
   persistentState: persistentStateReducer.reducer,
+  error: errorReducer.reducer,
 });
 
 const store = configureStore({

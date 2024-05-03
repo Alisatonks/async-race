@@ -1,11 +1,14 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useAddCarMutation } from '../redux/slices/requestsApi';
 import { CreatingCar } from '../types';
 import { CARS_BRANDS, CARS_MODELS } from '../utils/constants';
+import { setError } from '../redux/slices/errorReducer';
 
 function useCreate100Cars() {
   const [addCar] = useAddCarMutation();
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
   const generateCarName = () => {
     const brand = CARS_BRANDS[Math.floor(Math.random() * 10)];
     const model = CARS_MODELS[Math.floor(Math.random() * 10)];
@@ -29,8 +32,8 @@ function useCreate100Cars() {
           await addCar(car);
         })
       );
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      dispatch(setError(typeof e === 'string' ? e : 'Something went wrong'));
     } finally {
       setIsLoading(false);
     }
