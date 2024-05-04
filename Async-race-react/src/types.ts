@@ -55,3 +55,18 @@ export type Params = {
 };
 
 export type TotCars = string | null | undefined;
+
+export interface PersistentState {
+  inputCreate: { color: string; brand: string } | null;
+  inputUpdate: { color: string; brand: string } | null;
+  currentPageGarage: number;
+  currentPageWinners: number;
+  carsPositions: Record<number, number | undefined>;
+  startRace: boolean;
+  velocity: Record<number, number | undefined>;
+  distance: Record<number, number | undefined>;
+  statuses: Record<number, number | undefined>;
+  movingCars: Record<number, boolean | undefined>;
+  sortingBy: SortBy | undefined;
+  sortingOrder: SortingOrder | undefined;
+}
