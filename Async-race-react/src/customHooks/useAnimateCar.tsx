@@ -25,7 +25,7 @@ function useAnimateCar(id: number) {
         positionRef.current = carsPositions[id] || 0;
       }
     }
-  }, []);
+  }, [carsPositions[id], carRef.current]);
 
   const dispatch = useDispatch();
 
