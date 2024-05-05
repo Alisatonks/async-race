@@ -21,7 +21,7 @@ main {
 }
 
 .wrapper {
-  background-image: url("../../public/background/brick_wall3.jpeg");
+  background-image: url("/public/background/brick_wall3.jpeg");
   min-height: 100vh;
   padding: 4rem 5rem 2rem 5rem;
   display: flex;
