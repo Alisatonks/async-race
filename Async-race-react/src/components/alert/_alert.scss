@@ -1,0 +1,29 @@
+.alert-container {
+    position: absolute;
+    top: 2rem;
+    width: 100%;
+    @include position-center(0);
+}
+
+.alert{
+    border: 1px solid $error;
+    border-radius: 5px;
+    background-color: $error-bg;
+    padding: 2rem;
+    @include position-column(center, center, 1rem);
+    position: relative;
+
+    h4 {
+        color: $error;
+    }
+
+    button {
+        border: 1px solid $error;
+        color: $error;
+        border-radius: 4px;
+        width: 100%;
+        background: $error-bg;
+        padding: 0.5rem;
+        cursor: pointer;
+    }
+}

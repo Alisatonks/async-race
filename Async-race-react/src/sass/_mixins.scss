@@ -1,0 +1,33 @@
+@mixin position-column($horizontal, $vertical, $gap) {
+    display: flex;
+    justify-content: $vertical;
+    align-items: $horizontal;
+    flex-direction: column;
+    gap: $gap;
+}
+
+@mixin position-center($gap) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: $gap;
+}
+
+@mixin position-line($horizontal, $vertical, $gap) {
+    display: flex;
+    justify-content: $horizontal;
+    align-items: $vertical;
+    gap: $gap;
+}
+
+@mixin responsive-transform {
+    @media (max-width: $responsive-transform) { @content; }
+}
+
+@mixin tablet {
+    @media (max-width: $tablet-width) { @content; }
+}
+
+@mixin big-mobile {
+    @media (max-width: $big-mobile) { @content; }
+}

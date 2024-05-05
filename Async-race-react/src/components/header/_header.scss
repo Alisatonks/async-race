@@ -1,0 +1,79 @@
+.header {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+    @include tablet{
+        @include position-column(center, center, 0.5rem);
+    }
+}
+
+
+.neon-title{
+    
+    width: 100%;
+    text-align: center;
+    }
+    
+.neon-title__span{
+    @extend %neon-text;
+    font-weight: 400;
+    font-size: 6rem;
+  
+}
+    
+.neon-title__span span{
+    animation: wink linear infinite 2s;
+    }
+
+.neon-title__span span:nth-of-type(2){
+    animation: wink linear infinite 3s;
+}
+    @keyframes wink {
+    78% {
+        color: inherit;
+        text-shadow: inherit;
+    }
+    79%{
+        color: #333;
+    }
+    80% {
+        
+        text-shadow: none;
+    }
+    81% {
+        color: inherit;
+        text-shadow: inherit;
+    }
+    82% {
+        color: #333;
+        text-shadow: none;
+    }
+    83% {
+        color: inherit;
+        text-shadow: inherit;
+    }
+    92% {
+        color: #333;
+        text-shadow: none;
+    }
+    92.5% {
+        color: inherit;
+        text-shadow: inherit;
+    }
+    }
+
+.nav__ul {
+    @include position-column(start, start, 1rem);
+    @include tablet{
+        @include position-line(space-between, center, 0.5rem);
+        flex-direction: row;
+    }
+}
+
+.nav__li {
+    list-style: none;
+}
+
+.nav__link {
+    text-decoration: none;
+}

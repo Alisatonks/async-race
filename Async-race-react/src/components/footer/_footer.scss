@@ -1,0 +1,19 @@
+footer {
+  margin-top: auto;
+  @include position-line(center, center, 0);
+  width: 100%;
+
+  a {
+    text-decoration: none;
+  }
+
+  h5,
+  p {
+    float: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+  }
+}
