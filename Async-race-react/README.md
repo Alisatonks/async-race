@@ -1,4 +1,5 @@
 Link to deployed UI: https://alisa-tonks-react-async-race.netlify.app/
+Calculated score: 405
 
 1. View Configuration (30 points)
 - [x] Two Views (10 points): Implement two primary views: "Garage" and "Winners".
