@@ -12,11 +12,7 @@ import { setError } from '../redux/slices/errorReducer';
 
 const useAnimationLogic = (
   carId: number,
-  moveCar: (
-    velocity: number,
-    distance: number,
-    trackLength: number | undefined
-  ) => void,
+  moveCar: (velocity: number, distance: number) => void,
   pauseCar: () => void,
   stopCar: () => void
 ) => {
@@ -53,31 +49,26 @@ const useAnimationLogic = (
     }
   }, [carId, stopAnimation]);
 
-  const startAnimation = useCallback(
-    async (trackLength: number | undefined) => {
-      if (
-        carsVelocity[carId] !== undefined &&
-        carsDistance[carId] !== undefined
-      ) {
-        moveCar(carsDistance[carId]!, carsVelocity[carId]!, trackLength);
-      } else {
-        try {
-          const res = await startStopEngine(carId, EngineStatus.Started);
-          if (res) {
-            moveCar(res.distance, res.velocity, trackLength);
-            driveRequest();
-            dispatch(setVelocity({ id: carId, velocity: res.velocity }));
-            dispatch(setDistance({ id: carId, distance: res.distance }));
-          }
-        } catch (e) {
-          dispatch(
-            setError(typeof e === 'string' ? e : 'Something went wrong')
-          );
+  const startAnimation = useCallback(async () => {
+    if (
+      carsVelocity[carId] !== undefined &&
+      carsDistance[carId] !== undefined
+    ) {
+      moveCar(carsDistance[carId]!, carsVelocity[carId]!);
+    } else {
+      try {
+        const res = await startStopEngine(carId, EngineStatus.Started);
+        if (res) {
+          moveCar(res.distance, res.velocity);
+          driveRequest();
+          dispatch(setVelocity({ id: carId, velocity: res.velocity }));
+          dispatch(setDistance({ id: carId, distance: res.distance }));
         }
+      } catch (e) {
+        dispatch(setError(typeof e === 'string' ? e : 'Something went wrong'));
       }
-    },
-    [carId, carsDistance, carsVelocity, dispatch, driveRequest, moveCar]
-  );
+    }
+  }, [carId, carsDistance, carsVelocity, dispatch, driveRequest, moveCar]);
 
   return { stopAnimation, startAnimation };
 };

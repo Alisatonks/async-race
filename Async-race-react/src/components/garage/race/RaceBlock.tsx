@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CarBlock from './CarBlock';
 import Loader from '../../loader/Loader';
@@ -10,10 +10,14 @@ import WinnerModal from './modal/WinnerModal';
 import { EngineStatus, Finisher } from '../../../types';
 import useHandleWinner from '../../../customHooks/useHandleWinner';
 import { RootState } from '../../../redux/store';
-import { setStartRace } from '../../../redux/slices/persistentStateReducer';
+import {
+  setStartRace,
+  setStatuses,
+} from '../../../redux/slices/persistentStateReducer';
 import { startStopEngine } from '../../../utils/api';
 import useDeleteStoreValues from '../../../customHooks/useDeleteStoreValues';
 import { setError } from '../../../redux/slices/errorReducer';
+import { setWinner } from '../../../redux/slices/winnerReducer';
 
 export default function RaceBlock() {
   const currentPage = useSelector(
@@ -22,6 +26,7 @@ export default function RaceBlock() {
   const startRace = useSelector(
     (state: RootState) => state.persistentState.startRace
   );
+  const winner = useSelector((state: RootState) => state.winner.winner);
 
   const { data, isLoading, error, refetch } = useGetAllCarsQuery(currentPage);
   const cars = data?.carsData;
@@ -31,7 +36,6 @@ export default function RaceBlock() {
   const { createCarsPromise, isLoading: isGenerating } = useCreate100Cars();
   const [reset, setReset] = useState(false);
   const [finishers, setFinishers] = useState<Finisher[]>([]);
-  const [winner, setWinner] = useState<Finisher | undefined>(undefined);
   const [openWinnerModal, setOpenWinnerModal] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
 
@@ -54,24 +58,25 @@ export default function RaceBlock() {
   useEffect(() => {
     if (finishers.length && startRace && !winner) {
       setOpenWinnerModal(true);
-      setWinner(finishers[0]);
+      dispatch(setWinner(finishers[0]));
       handleWinner({
         id: finishers[0].id,
         time: finishers[0].time,
       });
     }
-  }, [finishers, handleWinner, startRace, winner]);
+  }, [dispatch, finishers, handleWinner, startRace, winner]);
 
   const handleStartRace = () => {
     dispatch(setStartRace(true));
-    setWinner(undefined);
+    dispatch(setWinner(null));
+    dispatch(setStatuses({}));
   };
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setReset(true);
     setFinishers([]);
     deleteStoreValues();
-  };
+  }, [deleteStoreValues]);
 
   async function stopEnginesPr(array: { id: number }[]) {
     try {
@@ -98,13 +103,28 @@ export default function RaceBlock() {
     await createCarsPromise();
   };
 
-  const addFinisher = (finisher: Finisher) => {
-    setFinishers([...finishers, finisher]);
-  };
+  const addFinisher = useCallback(
+    (finisher: Finisher) => {
+      setFinishers([...finishers, finisher]);
+    },
+    [finishers]
+  );
 
-  const handleCloseWinnerModal = () => {
+  const deleteFinisher = useCallback(
+    (id: number) => {
+      const newFinishers = [...finishers];
+      const idx = newFinishers.findIndex((el) => el.id === id);
+      if (idx !== -1) {
+        newFinishers.splice(idx, 1);
+        setFinishers(newFinishers);
+      }
+    },
+    [finishers]
+  );
+
+  const handleCloseWinnerModal = useCallback(() => {
     setOpenWinnerModal(false);
-  };
+  }, []);
 
   return (
     <>
@@ -147,6 +167,7 @@ export default function RaceBlock() {
               reset={reset}
               setReset={setReset}
               addFinisher={addFinisher}
+              deleteFinisher={deleteFinisher}
             />
           ))}
           <Pagination
